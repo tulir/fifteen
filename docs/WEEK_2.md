@@ -6,6 +6,7 @@ Added:
 * Puzzle validation methods
 * Manhattan distance calculation
 * Puzzle shuffling
-* Tests for everything
+* Initial IDA* algorithm
+* Tests
 
-Time spent: 6h
+Time spent: 10h

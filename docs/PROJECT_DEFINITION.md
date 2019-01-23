@@ -15,8 +15,14 @@ The space complexity of A* is the same as the time complexity. Due to this, it
 might be better to use [iterative deepening A*](https://en.wikipedia.org/wiki/Iterative_deepening_A*)
 instead of A*, as IDA* has a worst-case space complexity of O(d).
 
-The puzzles are stored as one-dimensional arrays. A* or IDA* 
+The puzzles are stored as one-dimensional arrays. IDA* requires a stack for
+remembering the current path.
 
-The program will be written in [Go](https://golang.org/). It will read and
-output text files with the game board columns separated by spaces and rows
-separated by newlines.
+The program will be written in [Go](https://golang.org/). It will read text
+files with the game board columns separated by spaces and rows separated by
+newlines or JSON with the board as a two-dimensional array. It will output
+the solution as a series of coordinates either separated by commas and newlines
+or as JSON objects with an `x` and `y` field.
+
+The program will take options as command-line flags. It will also optionally
+show step-by-step moves with a ncurses-like UI.
