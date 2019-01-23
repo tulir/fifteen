@@ -4,6 +4,8 @@ Added:
 * Basic puzzle struct and methods
 * String puzzle parser
 * Puzzle validation methods
+* Manhattan distance calculation
+* Puzzle shuffling
 * Tests for everything
 
-Time spent: 4h
+Time spent: 6h

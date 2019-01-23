@@ -14,11 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package fifteen
+package main
 
 import (
 	"fmt"
+	"math/rand"
+	"maunium.net/go/fifteen/fifteen"
 	flag "maunium.net/go/mauflag"
+	"time"
 )
 
 var input = flag.MakeFull("i", "input", "Path to read input from.", "-").String()
@@ -36,5 +39,19 @@ func main() {
 		flag.PrintHelp()
 		return
 	}
-	fmt.Println("This program does not do anything yet.")
+	rand.Seed(time.Now().UnixNano())
+	puzzle := fifteen.NewSolvedPuzzle(4)
+	start := time.Now().UnixNano()
+	puzzle.Shuffle(10000)
+	end := time.Now().UnixNano()
+	fmt.Println("Shuffling took", end-start, "µs")
+	fmt.Println(puzzle.String())
+	start = time.Now().UnixNano()
+	solvable := puzzle.Solvable()
+	end = time.Now().UnixNano()
+	if !solvable {
+		fmt.Println("Solvable check failed!")
+	} else {
+		fmt.Println("Solvable check took", end-start, "µs")
+	}
 }

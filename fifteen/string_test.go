@@ -21,11 +21,10 @@ import (
 	"testing"
 )
 
-func TestPuzzle_Shuffle(t *testing.T) {
+func TestPuzzle_String(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	assert.True(t, puzzle.Solvable())
-	assert.True(t, puzzle.IsSolved())
-	puzzle.Shuffle(30)
-	assert.True(t, puzzle.Solvable())
-	assert.False(t, puzzle.IsSolved())
+	assert.Equal(t, ` 1  2  3  4 
+ 5  6  7  8 
+ 9 10 11 12 
+13 14 15    `, puzzle.String())
 }

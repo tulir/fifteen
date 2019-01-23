@@ -11,7 +11,7 @@ Data structures and algorithms project, 15-puzzle solver. Written in Go.
 ## Instructions
 ### Installation
 0. Install [Go](https://golang.org/) 1.11 or higher
-1. Clone the repository (`git clone git@github.com:tulir/hy-tiralabra-15p`)
+1. Clone the repository (`git clone git@github.com:tulir/fifteen.git`)
 2. Fetch dependencies and compile with `go get`
 
 The compiled binary should now exist at `$GOPATH/bin/fifteen`. `$GOPATH`
