@@ -32,16 +32,19 @@ func digits(i int) (count int) {
 
 func (puzzle *Puzzle) String() string {
 	var builder strings.Builder
-	maxLen := digits(len(puzzle.data)-1)
-	format := "%" + strconv.Itoa(maxLen) + "d "
+	maxLen := digits(len(puzzle.data) - 1)
+	format := "%" + strconv.Itoa(maxLen) + "d"
 	for i, val := range puzzle.data {
 		if i != 0 && i%puzzle.n == 0 {
 			builder.WriteRune('\n')
 		}
 		if val == 0 {
-			_, _ = fmt.Fprint(&builder, strings.Repeat(" ", maxLen+1))
+			_, _ = fmt.Fprint(&builder, strings.Repeat(" ", maxLen))
 		} else {
 			_, _ = fmt.Fprintf(&builder, format, val)
+		}
+		if (i+1)%puzzle.n != 0 {
+			builder.WriteRune(' ')
 		}
 	}
 	return builder.String()
