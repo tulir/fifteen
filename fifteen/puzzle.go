@@ -16,17 +16,22 @@
 
 package fifteen
 
+import (
+	"errors"
+)
+
 // Puzzle is the base container for 15-puzzles.
 type Puzzle struct {
-	data []int
-	n    int
+	data  []int
+	n     int
+	blank Position
 }
 
 // NewPuzzle creates a new blank puzzle.
 func NewPuzzle(n int) *Puzzle {
 	return &Puzzle{
-		data: make([]int, n*n),
-		n:    n,
+		data:  make([]int, n*n),
+		n:     n,
 	}
 }
 
@@ -36,13 +41,17 @@ func NewSolvedPuzzle(n int) *Puzzle {
 	for i := 1; i < len(puzzle.data); i++ {
 		puzzle.data[i-1] = i
 	}
+	puzzle.blank.X = 4
+	puzzle.blank.Y = 4
 	return puzzle
 }
 
 // Copy creates a copy of this puzzle.
 func (puzzle *Puzzle) Copy() *Puzzle {
 	newPuzzle := NewPuzzle(puzzle.n)
-	copy(puzzle.data, newPuzzle.data)
+	copy(newPuzzle.data, puzzle.data)
+	newPuzzle.blank.X = puzzle.blank.X
+	newPuzzle.blank.Y = puzzle.blank.Y
 	return newPuzzle
 }
 
@@ -58,6 +67,9 @@ func (puzzle *Puzzle) Get(x, y int) int {
 func (puzzle *Puzzle) Set(x, y, val int) {
 	if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return
+	}
+	if val == 0 {
+		puzzle.blank = Position{x, y}
 	}
 	puzzle.data[puzzle.Index(x, y)] = val
 }
@@ -94,5 +106,38 @@ func (puzzle *Puzzle) Move(x, y int) bool {
 		return false
 	}
 	puzzle.Set(x, y, 0)
+	puzzle.blank.X = x
+	puzzle.blank.Y = y
 	return true
+}
+
+func (puzzle *Puzzle) SetData(data [][]int) error {
+	if len(data) != puzzle.n {
+		return errors.New("invalid input height")
+	}
+	newData := make([]int, puzzle.n*puzzle.n)
+	for i := 0; i < puzzle.n; i++ {
+		if len(data[i]) != puzzle.n {
+			return errors.New("invalid input width")
+		}
+		copy(newData[i*puzzle.n : (i+1)*puzzle.n], data[i])
+	}
+	puzzle.data = newData
+	return nil
+}
+
+func (puzzle *Puzzle) Data() [][]int {
+	data := make([][]int, puzzle.n)
+	for i := 0; i < puzzle.n; i++ {
+		data[i] = puzzle.data[i*puzzle.n : (i+1)*puzzle.n]
+	}
+	return data
+}
+
+func (puzzle *Puzzle) Size() int {
+	return puzzle.n
+}
+
+func (puzzle *Puzzle) GetValidMoves() []Position {
+	return puzzle.blank.ValidMoves(puzzle.n)
 }

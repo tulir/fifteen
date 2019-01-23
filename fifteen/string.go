@@ -17,12 +17,14 @@
 package fifteen
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
-func digits(i int) (count int) {
+func Digits(i int) (count int) {
 	for i != 0 {
 		i /= 10
 		count++
@@ -32,7 +34,7 @@ func digits(i int) (count int) {
 
 func (puzzle *Puzzle) String() string {
 	var builder strings.Builder
-	maxLen := digits(len(puzzle.data) - 1)
+	maxLen := Digits(len(puzzle.data) - 1)
 	format := "%" + strconv.Itoa(maxLen) + "d"
 	for i, val := range puzzle.data {
 		if i != 0 && i%puzzle.n == 0 {
@@ -45,6 +47,35 @@ func (puzzle *Puzzle) String() string {
 		}
 		if (i+1)%puzzle.n != 0 {
 			builder.WriteRune(' ')
+		}
+	}
+	return builder.String()
+}
+
+func (puzzle *Puzzle) Binary() string {
+	var builder bytes.Buffer
+	if len(puzzle.data) > 254 {
+		separator := []byte{0, 0, 0, 0}
+		builder.WriteByte(0)
+		builder.WriteByte(1)
+		for _, val := range puzzle.data {
+			if val == 0 {
+				builder.Write([]byte{255, 255, 255, 255})
+			} else {
+				_ = binary.Write(&builder, binary.LittleEndian, val)
+			}
+			builder.Write(separator)
+		}
+	} else {
+		builder.WriteByte(0)
+		builder.WriteByte(0)
+		for _, val := range puzzle.data {
+			if val == 0 {
+				builder.WriteByte(255)
+			} else {
+				builder.WriteByte(byte(val))
+			}
+			builder.WriteByte(0)
 		}
 	}
 	return builder.String()

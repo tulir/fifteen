@@ -35,7 +35,7 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 			val, err := strconv.Atoi(cell)
 			if err != nil {
 				return nil, fmt.Errorf("parse error at row %d column %d: %v", y, x, err)
-			} else if val >= puzzle.n * puzzle.n {
+			} else if val >= puzzle.n*puzzle.n {
 				return nil, fmt.Errorf("value too large at row %d column %d", y, x)
 			} else if val < 0 {
 				return nil, fmt.Errorf("value too small at row %d column %d", y, x)

@@ -48,9 +48,9 @@ func TestPuzzle_Copy(t *testing.T) {
 	puzzle2 := puzzle1.Copy()
 	assert.Zero(t, puzzle1.data[10])
 	assert.Zero(t, puzzle2.data[10])
-	puzzle1.data[10] = 5
-	assert.Equal(t, 5, puzzle1.data[10])
-	assert.Zero(t, puzzle2.data[10])
+	puzzle2.data[10] = 5
+	assert.Zero(t, puzzle1.data[10])
+	assert.Equal(t, 5, puzzle2.data[10])
 }
 
 func TestPuzzle_Get(t *testing.T) {

@@ -26,40 +26,21 @@ func NewRandomPuzzle() {
 	// TODO
 }
 
-type position struct {
-	x int
-	y int
-}
-
-func (pos position) valid(size int) bool {
-	return pos.x >= 1 && pos.y >= 1 && pos.x <= size && pos.y <= size
-}
-
 // Shuffle makes the given amount of random moves on the puzzle.
 func (puzzle *Puzzle) Shuffle(moves int) {
-	var pos position
-	for i := len(puzzle.data) - 1; i >= 0; i-- {
-		if puzzle.data[i] == 0 {
-			pos.x, pos.y = puzzle.Coordinates(i)
-			break
-		}
-	}
-	var validMoves []position
-	var allMoves [4]position
+	pos := puzzle.blank
+	var validMoves []Position
+	var allMoves [4]Position
 	for i := 0; i < moves; i++ {
-		allMoves = [4]position{
-			{pos.x - 1, pos.y},
-			{pos.x + 1, pos.y},
-			{pos.x, pos.y - 1},
-			{pos.x, pos.y + 1},
-		}
-		validMoves = make([]position, 0, 4)
+		allMoves[0], allMoves[1], allMoves[2], allMoves[3] = pos.AllMoves()
+
+		validMoves = make([]Position, 0, 4)
 		for _, move := range allMoves {
-			if move.valid(puzzle.n) {
+			if move.Valid(puzzle.n) {
 				validMoves = append(validMoves, move)
 			}
 		}
 		pos = validMoves[rand.Intn(len(validMoves))]
-		puzzle.Move(pos.x, pos.y)
+		puzzle.Move(pos.X, pos.Y)
 	}
 }
