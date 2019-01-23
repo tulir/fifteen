@@ -58,6 +58,12 @@ func main() {
 		return
 	}
 
+	if *shuffle == 0 && len(*input) == 0 {
+		stderr("No shuffling or input given")
+		flag.PrintHelp()
+		return
+	}
+
 	if *randomSeed == -1 {
 		rand.Seed(time.Now().UnixNano())
 	} else {
@@ -94,8 +100,14 @@ func main() {
 	solvable := puzzle.Solvable()
 	if !solvable {
 		stderr("Input puzzle is not solvable!")
+		return
 	}
 	puzzle.Shuffle(*shuffle)
+
+	if puzzle.IsSolved() {
+		stderr("Puzzle is already solved")
+		return
+	}
 
 	var solution []fifteen.Position
 	var duration int64
