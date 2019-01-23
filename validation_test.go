@@ -28,19 +28,19 @@ func TestPuzzle_HasAllNumbers_Solved(t *testing.T) {
 
 func TestPuzzle_HasAllNumbers_AlmostValid(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Set(2, 2, 0)
+	puzzle.Set(3, 3, 0)
 	assert.False(t, puzzle.HasAllNumbers())
 }
 
 func TestPuzzle_HasAllNumbers_OutOfRange1(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Set(2, 2, 16)
+	puzzle.Set(3, 3, 16)
 	assert.False(t, puzzle.HasAllNumbers())
 }
 
 func TestPuzzle_HasAllNumbers_OutOfRange2(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Set(2, 2, -1)
+	puzzle.Set(3, 3, -1)
 	assert.False(t, puzzle.HasAllNumbers())
 }
 
@@ -56,8 +56,8 @@ func TestPuzzle_Solvable_Solved(t *testing.T) {
 
 func TestPuzzle_Solvable_SingleInversion(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Set(1, 3, 15)
-	puzzle.Set(2, 3, 14)
+	puzzle.Set(2, 4, 15)
+	puzzle.Set(3, 4, 14)
 	assert.False(t, puzzle.Solvable())
 }
 
@@ -73,8 +73,8 @@ func TestPuzzle_Solvable_Solved_9p(t *testing.T) {
 
 func TestPuzzle_Solvable_SingleInversion_9p(t *testing.T) {
 	puzzle := NewSolvedPuzzle(3)
-	puzzle.Set(0, 2, 8)
-	puzzle.Set(1, 2, 7)
+	puzzle.Set(1, 3, 8)
+	puzzle.Set(2, 3, 7)
 	assert.False(t, puzzle.Solvable())
 }
 
@@ -94,12 +94,12 @@ func TestPuzzle_IsSolved_Blank(t *testing.T) {
 
 func TestPuzzle_IsSolved_SingleMove(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Move(2, 3)
+	puzzle.Move(3, 4)
 	assert.False(t, puzzle.IsSolved())
 }
 
 func TestPuzzle_IsSolved_NoZero(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	puzzle.Set(3, 3, 16)
+	puzzle.Set(4, 4, 16)
 	assert.False(t, puzzle.IsSolved())
 }

@@ -55,13 +55,13 @@ func TestPuzzle_Copy(t *testing.T) {
 
 func TestPuzzle_Get(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
-	assert.Equal(t, 5, puzzle.Get(0, 1))
-	assert.Equal(t, 0, puzzle.Get(3, 3))
-	assert.Equal(t, 1, puzzle.Get(0, 0))
-	assert.Equal(t, -1, puzzle.Get(-1, 1))
+	assert.Equal(t, 5, puzzle.Get(1, 2))
+	assert.Equal(t, 0, puzzle.Get(4, 4))
+	assert.Equal(t, 1, puzzle.Get(1, 1))
+	assert.Equal(t, -1, puzzle.Get(0, 1))
 	assert.Equal(t, -1, puzzle.Get(1, -1))
-	assert.Equal(t, -1, puzzle.Get(4, 1))
-	assert.Equal(t, -1, puzzle.Get(1, 4))
+	assert.Equal(t, -1, puzzle.Get(5, 1))
+	assert.Equal(t, -1, puzzle.Get(1, 5))
 }
 
 func TestPuzzle_Set(t *testing.T) {
@@ -69,28 +69,35 @@ func TestPuzzle_Set(t *testing.T) {
 	for _, val := range puzzle.data {
 		assert.Zero(t, val)
 	}
-	puzzle.Set(4, 4, 5)
+	puzzle.Set(5, 5, 5)
 	for _, val := range puzzle.data {
 		assert.Zero(t, val)
 	}
-	puzzle.Set(2, 2, 5)
+	puzzle.Set(3, 3, 5)
 	assert.Equal(t, 5, puzzle.data[10])
+}
+
+func TestPuzzle_Coordinates(t *testing.T) {
+	puzzle := NewPuzzle(4)
+	x, y := puzzle.Coordinates(9)
+	assert.Equal(t, 1, x)
+	assert.Equal(t, 3, y)
 }
 
 func TestPuzzle_Move(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)
 	assert.False(t, puzzle.Move(-1, -1))
-	assert.True(t, puzzle.Move(2, 3))
-	assert.Zero(t, puzzle.Get(2, 3))
-	assert.Equal(t, 15, puzzle.Get(3, 3))
-	assert.False(t, puzzle.Move(2, 3))
-	assert.True(t, puzzle.Move(2, 2))
-	assert.Zero(t, puzzle.Get(2, 2))
-	assert.Equal(t, 11, puzzle.Get(2, 3))
-	assert.True(t, puzzle.Move(3, 2))
-	assert.Zero(t, puzzle.Get(3, 2))
-	assert.Equal(t, 12, puzzle.Get(2, 2))
+	assert.True(t, puzzle.Move(3, 4))
+	assert.Zero(t, puzzle.Get(3, 4))
+	assert.Equal(t, 15, puzzle.Get(4, 4))
+	assert.False(t, puzzle.Move(3, 4))
 	assert.True(t, puzzle.Move(3, 3))
 	assert.Zero(t, puzzle.Get(3, 3))
-	assert.Equal(t, 15, puzzle.Get(3, 2))
+	assert.Equal(t, 11, puzzle.Get(3, 4))
+	assert.True(t, puzzle.Move(4, 3))
+	assert.Zero(t, puzzle.Get(4, 3))
+	assert.Equal(t, 12, puzzle.Get(3, 3))
+	assert.True(t, puzzle.Move(4, 4))
+	assert.Zero(t, puzzle.Get(4, 4))
+	assert.Equal(t, 15, puzzle.Get(4, 3))
 }

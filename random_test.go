@@ -16,29 +16,16 @@
 
 package fifteen
 
-// ManhattanDistance returns the sum of the manhattan distances between the cells and their final positions.
-// This is used as the heuristic for the (ID)A* algorithm in the solver.
-func (puzzle *Puzzle) ManhattanDistance() int {
-	var sum int
-	for i, val := range puzzle.data {
-		sum += puzzle.manhattanDistance(i, val)
-	}
-	return sum
-}
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-func (puzzle *Puzzle) manhattanDistance(position, value int) int {
-	if value == 0 {
-		// Calculate empty slot as last value
-		value = puzzle.n * puzzle.n
-	}
-	pX, pY := puzzle.Coordinates(position)
-	tX, tY := puzzle.Coordinates(value-1)
-	return abs(pX - tX) + abs(pY - tY)
+func TestPuzzle_Shuffle(t *testing.T) {
+	puzzle := NewSolvedPuzzle(4)
+	assert.True(t, puzzle.Solvable())
+	assert.True(t, puzzle.IsSolved())
+	puzzle.Shuffle(30)
+	assert.True(t, puzzle.Solvable())
+	assert.False(t, puzzle.IsSolved())
 }

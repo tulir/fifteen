@@ -40,7 +40,7 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 			} else if val < 0 {
 				return nil, fmt.Errorf("value too small at row %d column %d", y, x)
 			}
-			puzzle.Set(x, y, val)
+			puzzle.Set(x+1, y+1, val)
 		}
 	}
 	return puzzle, nil

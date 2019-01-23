@@ -45,8 +45,7 @@ func (puzzle *Puzzle) Solvable() bool {
 		found[val] = true
 
 		if val == 0 {
-			// Calculate row from index and puzzle width
-			blankSpotRow = int(i/puzzle.n) + 1
+			_, blankSpotRow = puzzle.Coordinates(i)
 		}
 		for j := i + 1; j < len(puzzle.data); j++ {
 			jVal := puzzle.data[j]

@@ -48,18 +48,30 @@ func (puzzle *Puzzle) Copy() *Puzzle {
 
 // Get gets the value of a specific slot.
 func (puzzle *Puzzle) Get(x, y int) int {
-	if x < 0 || y < 0 || x >= puzzle.n || y >= puzzle.n {
+	if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return -1
 	}
-	return puzzle.data[y*puzzle.n+x]
+	return puzzle.data[puzzle.Index(x, y)]
 }
 
 // Set sets the value of a specific slot.
 func (puzzle *Puzzle) Set(x, y, val int) {
-	if x < 0 || y < 0 || x >= puzzle.n || y >= puzzle.n {
+	if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return
 	}
-	puzzle.data[y*puzzle.n+x] = val
+	puzzle.data[puzzle.Index(x, y)] = val
+}
+
+// Index returns the index of the given coordinates in the puzzle.
+func (puzzle *Puzzle) Index(x, y int) int {
+	return (y-1)*puzzle.n + (x - 1)
+}
+
+// Coordinates returns the X and Y coordinates of the given index in the puzzle.
+func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
+	y = int(index/puzzle.n) + 1
+	x = index % puzzle.n
+	return
 }
 
 // Move moves the piece at the given coordinates to the empty slot next to it.
@@ -68,7 +80,7 @@ func (puzzle *Puzzle) Set(x, y, val int) {
 func (puzzle *Puzzle) Move(x, y int) bool {
 	val := puzzle.Get(x, y)
 	switch {
-	case x < 0 || y < 0 || x >= puzzle.n || y >= puzzle.n:
+	case x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n:
 		return false
 	case puzzle.Get(x-1, y) == 0:
 		puzzle.Set(x-1, y, val)
