@@ -1,7 +1,7 @@
 # 15-puzzle solver
-[![Build Status](https://travis-ci.org/tulir/hy-tiralabra-15p.svg?branch=master)](https://travis-ci.org/tulir/hy-tiralabra-15p)
-[![Maintainability](https://api.codeclimate.com/v1/badges/bb4f556a0d3fa2d3f500/maintainability)](https://codeclimate.com/github/tulir/hy-tiralabra-15p/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/bb4f556a0d3fa2d3f500/test_coverage)](https://codeclimate.com/github/tulir/hy-tiralabra-15p/test_coverage)
+[![Build Status](https://travis-ci.org/tulir/fifteen.svg?branch=master)](https://travis-ci.org/tulir/fifteen)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d8575cfd2ecbeaebc4c3/maintainability)](https://codeclimate.com/github/tulir/fifteen/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d8575cfd2ecbeaebc4c3/test_coverage)](https://codeclimate.com/github/tulir/fifteen/test_coverage)
 
 Data structures and algorithms project, 15-puzzle solver. Written in Go.
 
