@@ -32,11 +32,13 @@ import (
 
 var input = flag.MakeFull("i", "input", "Path to read input from. Generates random puzzle by default", "").String()
 var output = flag.MakeFull("o", "output", "Path to output result to. Defaults to stdout", "-").String()
-var shuffle = flag.MakeFull("s", "shuffle", "Number of moves to shuffle the puzzle with before solving.", "0").Int()
+var randomize = flag.MakeFull("r", "randomize", "Randomization mode. One of: shuffle, random", "shuffle").String()
+var shuffle = flag.MakeFull("n", "shuffle", "Number of moves to shuffle the puzzle with before solving.", "0").Int()
 var outputFormat = flag.MakeFull("f", "format", "Output format. One of: text, json", "text").String()
 var animateFormat = flag.MakeFull("a", "animate", "Animation format. One of: solution, steps", "").String()
 var animateTime = flag.MakeFull("d", "duration", "Animation duration (only applicable for solution animation", "10").Int()
-var randomSeed = flag.MakeFull("r", "seed", "Seed for randomization. Defaults to current time", "-1").Int64()
+var randomSeed = flag.MakeFull("s", "seed", "Seed for randomization. Defaults to current time", "-1").Int64()
+var size = flag.MakeFull("w", "size", "Size of game. Only applicable when generating puzzle.", "4").Int()
 var wantHelp, _ = flag.MakeHelpFlag()
 
 type JSONInput [][]int
@@ -58,7 +60,7 @@ func main() {
 		return
 	}
 
-	if *shuffle == 0 && len(*input) == 0 {
+	if *randomize != "random" && *shuffle == 0 && len(*input) == 0 {
 		stderr("No shuffling or input given")
 		flag.PrintHelp()
 		return
@@ -71,8 +73,10 @@ func main() {
 	}
 
 	var puzzle *fifteen.Puzzle
-	if len(*input) == 0 {
-		puzzle = fifteen.NewSolvedPuzzle(4)
+	if *randomize == "random" {
+		puzzle = fifteen.NewRandomPuzzle(*size)
+	} else if len(*input) == 0 {
+		puzzle = fifteen.NewSolvedPuzzle(*size)
 	} else {
 		data, err := ioutil.ReadFile(*input)
 		if err != nil {
@@ -102,7 +106,9 @@ func main() {
 		stderr("Input puzzle is not solvable!")
 		return
 	}
-	puzzle.Shuffle(*shuffle)
+	if *randomize == "shuffle" {
+		puzzle.Shuffle(*shuffle)
+	}
 
 	if puzzle.IsSolved() {
 		stderr("Puzzle is already solved")

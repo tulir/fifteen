@@ -28,3 +28,12 @@ func TestPuzzle_String(t *testing.T) {
  9 10 11 12
 13 14 15   `, puzzle.String())
 }
+
+func TestPuzzle_Binary(t *testing.T) {
+	puzzle := NewSolvedPuzzle(4)
+	assert.Equal(t, string([]byte{0, 0,
+		1, 0, 2, 0, 3, 0, 4, 0,
+		5, 0, 6, 0, 7, 0, 8, 0,
+		9, 0, 10, 0, 11, 0, 12, 0,
+		13, 0, 14, 0, 15, 0, 255, 0}), puzzle.Binary())
+}

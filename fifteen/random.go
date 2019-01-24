@@ -22,8 +22,21 @@ import (
 
 // NewRandomPuzzle creates a puzzle with completely random values.
 // It is not guaranteed to be solvable.
-func NewRandomPuzzle() {
-	// TODO
+func NewRandomPuzzle(n int) *Puzzle {
+	puzzle := NewPuzzle(n)
+	puzzle.data = rand.Perm(len(puzzle.data))
+	ptr := len(puzzle.data) - 1
+	for !puzzle.Solvable() {
+		puzzle.data[ptr], puzzle.data[ptr-1] = puzzle.data[ptr-1], puzzle.data[ptr]
+		ptr--
+	}
+	for i, val := range puzzle.data {
+		if val == 0 {
+			puzzle.blank.X, puzzle.blank.Y = puzzle.Coordinates(i)
+			break
+		}
+	}
+	return puzzle
 }
 
 // Shuffle makes the given amount of random moves on the puzzle.

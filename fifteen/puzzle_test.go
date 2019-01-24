@@ -79,9 +79,23 @@ func TestPuzzle_Set(t *testing.T) {
 
 func TestPuzzle_Coordinates(t *testing.T) {
 	puzzle := NewPuzzle(4)
+	// Indices:
+	//  0  1  2  3
+	//  4  5  6  7
+	//  8  9 10 11
+	// 12 13 14 15
 	x, y := puzzle.Coordinates(9)
-	assert.Equal(t, 1, x)
+	assert.Equal(t, 2, x)
 	assert.Equal(t, 3, y)
+	x, y = puzzle.Coordinates(3)
+	assert.Equal(t, 4, x)
+	assert.Equal(t, 1, y)
+	x, y = puzzle.Coordinates(15)
+	assert.Equal(t, 4, x)
+	assert.Equal(t, 4, y)
+	x, y = puzzle.Coordinates(0)
+	assert.Equal(t, 1, x)
+	assert.Equal(t, 1, y)
 }
 
 func TestPuzzle_Move(t *testing.T) {
@@ -100,4 +114,65 @@ func TestPuzzle_Move(t *testing.T) {
 	assert.True(t, puzzle.Move(4, 4))
 	assert.Zero(t, puzzle.Get(4, 4))
 	assert.Equal(t, 15, puzzle.Get(4, 3))
+}
+
+func TestPuzzle_Size(t *testing.T) {
+	assert.Equal(t, 50, NewPuzzle(50).Size())
+	assert.Equal(t, 25, NewSolvedPuzzle(25).Size())
+}
+
+func TestPuzzle_SetData(t *testing.T) {
+	puzzle := NewPuzzle(4)
+	assert.Equal(t, 0, puzzle.Get(2, 3))
+	assert.Equal(t, []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, puzzle.data)
+	err := puzzle.SetData([][]int{
+		{7, 4, 3, 8},
+		{1, 12, 2, 9},
+		{6, 14, 11, 13},
+		{15, 5, 10, 0},
+	})
+	assert.Nil(t, err)
+	assert.Equal(t, 14, puzzle.Get(2, 3))
+	assert.Equal(t, []int{7, 4, 3, 8, 1, 12, 2, 9, 6, 14, 11, 13, 15, 5, 10, 0}, puzzle.data)
+}
+
+func TestPuzzle_SetData_InvalidWidth(t *testing.T) {
+	puzzle := NewPuzzle(4)
+	err := puzzle.SetData([][]int{
+		{7, 4, 3, 8},
+		{1, 12, 2, 9, 16},
+		{6, 14, 11, 13},
+		{15, 5, 10, 0},
+	})
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "invalid input width")
+}
+
+func TestPuzzle_SetData_InvalidHeight(t *testing.T) {
+	puzzle := NewPuzzle(4)
+	err := puzzle.SetData([][]int{
+		{7, 4, 3, 8},
+		{1, 12, 2, 9},
+		{6, 14, 11, 13},
+		{15, 5, 10, 0},
+		{17, 16, 18, 19},
+	})
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "invalid input height")
+}
+
+func TestPuzzle_Data(t *testing.T) {
+	assert.Equal(t, [][]int{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 0},
+	}, NewSolvedPuzzle(4).Data())
+	assert.Equal(t, [][]int{
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+	}, NewPuzzle(5).Data())
 }

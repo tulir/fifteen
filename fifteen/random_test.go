@@ -18,8 +18,22 @@ package fifteen
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
+
+func TestNewRandomPuzzle(t *testing.T) {
+	// Seed chosen so that the initial randomization won't provide a solvable puzzle.
+	rand.Seed(1236)
+	puzzle := NewRandomPuzzle(4)
+	assert.Equal(t, [][]int{
+		{2, 12, 5, 15},
+		{9, 14, 1, 13},
+		{11, 3, 8, 0},
+		{6, 4, 7, 10},
+	}, puzzle.Data())
+	assert.Equal(t, Position{4, 3}, puzzle.blank)
+}
 
 func TestPuzzle_Shuffle(t *testing.T) {
 	puzzle := NewSolvedPuzzle(4)

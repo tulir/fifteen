@@ -30,8 +30,8 @@ type Puzzle struct {
 // NewPuzzle creates a new blank puzzle.
 func NewPuzzle(n int) *Puzzle {
 	return &Puzzle{
-		data:  make([]int, n*n),
-		n:     n,
+		data: make([]int, n*n),
+		n:    n,
 	}
 }
 
@@ -82,7 +82,7 @@ func (puzzle *Puzzle) Index(x, y int) int {
 // Coordinates returns the X and Y coordinates of the given index in the puzzle.
 func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 	y = int(index/puzzle.n) + 1
-	x = index % puzzle.n
+	x = index%puzzle.n + 1
 	return
 }
 
@@ -120,7 +120,7 @@ func (puzzle *Puzzle) SetData(data [][]int) error {
 		if len(data[i]) != puzzle.n {
 			return errors.New("invalid input width")
 		}
-		copy(newData[i*puzzle.n : (i+1)*puzzle.n], data[i])
+		copy(newData[i*puzzle.n:(i+1)*puzzle.n], data[i])
 	}
 	puzzle.data = newData
 	return nil
