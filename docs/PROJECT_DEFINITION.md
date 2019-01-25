@@ -11,12 +11,16 @@ heuristic is required. The worst case is O(b^d), where b is the branching
 factor (average number of successors per state, directly determined by the
 heuristic used) and d is the length of the shortest path.
 
+The heuristic used will be the sum of the manhattan distance from each tile to
+the target position of that tile. As it involves the distance of each tile,
+the time complexity is O(n) where n is the number of tiles (i.e. puzzle size^2).
+
 The space complexity of A* is the same as the time complexity. Due to this, it
 might be better to use [iterative deepening A*](https://en.wikipedia.org/wiki/Iterative_deepening_A*)
 instead of A*, as IDA* has a worst-case space complexity of O(d).
 
-The puzzles are stored as one-dimensional arrays. IDA* requires a stack for
-remembering the current path.
+The puzzles are stored as one-dimensional arrays. IDA* requires a stack data
+structure for remembering the current path.
 
 The program will be written in [Go](https://golang.org/). It will read text
 files with the game board columns separated by spaces and rows separated by

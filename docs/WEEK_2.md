@@ -1,12 +1,26 @@
 # Week 2 report
-Added:
-* Project language and more details about the planned algorithm to project definition
+Started with adding missing details to project definition as requested in
+feedback.
+
+The program can now read input puzzles, generate or shuffle puzzles, solve easy
+puzzles fairly quickly, output solutions and render solutions with a fancy TUI
+view.
+
+More detailed list of things that were done (approximate chronological order):
 * Basic puzzle struct and methods
 * String puzzle parser
 * Puzzle validation methods
 * Manhattan distance calculation
 * Puzzle shuffling
-* Initial IDA* algorithm
-* Tests
+* Most unit tests except for the algorithm itself
+* Set up Travis CI for running tests, Code Climate for static analysis and Godoc
+  for viewing the inline docs.
+* Initial IDA* solver
+* Main program with I/O and a fancy TUI view of solutions
+* Random puzzle generator
 
-Time spent: 10h
+Next steps:
+* Improve performance of algorithm
+* Add unit tests for algorithm
+
+Time spent: 11h
