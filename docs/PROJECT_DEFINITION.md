@@ -1,15 +1,22 @@
 # Project definition
-The aim of the project is to implement an efficient way to solve
-[15-puzzles](https://en.wikipedia.org/wiki/15_puzzle).
+The aim of the project is to implement an efficient algorithm that solves
+[15-puzzles](https://en.wikipedia.org/wiki/15_puzzle). While the primary goal
+is solving 15-puzzles specifically, other sizes will also be supported by the
+program. This document refers to the width and height of the game board as
+"puzzle size". The puzzle size of 15-puzzles is 4.
 
 Based on preliminary research, it seems that [A*](https://en.wikipedia.org/wiki/A*_search_algorithm)
 or some similar algorithm can be used along with some heuristics to solve
 the problem.
 
 The time complexity of A* depends on the heuristic used, so a relatively fast
-heuristic is required. The worst case is O(b^d), where b is the branching
-factor (average number of successors per state, directly determined by the
-heuristic used) and d is the length of the shortest path.
+heuristic is required. The worst case is `O(b^d)`. `b` is the branching factor,
+i.e. the average number of successors per state, and d is the length of the
+shortest path. In this case, there are always 2, 3 or 4 possible successors
+with 3 being the average when puzzle size = 4. For larger puzzle sizes, the
+average moves closer to 4. `b = (4 * (size-2)^2 + 3 * (size-2)*4 + 2 * 4) / size^2`
+15-puzzles have been proven to be solvable in 80 moves. Therefore, when puzzle
+size = 4, b = 3 and 0 ≤ d ≤ 80.
 
 The heuristic used will be the sum of the manhattan distance from each tile to
 the target position of that tile. As it involves the distance of each tile,
@@ -30,3 +37,8 @@ or as JSON objects with an `x` and `y` field.
 
 The program will take options as command-line flags. It will also optionally
 show step-by-step moves with a ncurses-like UI.
+
+Sources (also linked inline in text):
+* [en.wikipedia.org/wiki/15_puzzle](https://en.wikipedia.org/wiki/15_puzzle)
+* [en.wikipedia.org/wiki/A*_search_algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
+* [en.wikipedia.org/wiki/Iterative_deepening_A*](https://en.wikipedia.org/wiki/Iterative_deepening_A*)
