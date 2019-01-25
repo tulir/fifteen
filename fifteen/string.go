@@ -52,7 +52,7 @@ func (puzzle *Puzzle) String() string {
 	return builder.String()
 }
 
-func (puzzle *Puzzle) Binary() string {
+func (puzzle *Puzzle) Bytes() string {
 	var builder bytes.Buffer
 	if len(puzzle.data) > 254 {
 		separator := []byte{0, 0, 0, 0}

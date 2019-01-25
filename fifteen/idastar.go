@@ -20,23 +20,32 @@ import (
 	"fmt"
 )
 
-type stack []string
+type StringStack []string
 
-func (s *stack) Push(v string) {
+func (s *StringStack) Push(v string) {
 	*s = append(*s, v)
 }
 
-func (s *stack) Pop() string {
+func (s *StringStack) Pop() string {
 	res := (*s)[len(*s)-1]
 	*s = (*s)[:len(*s)-1]
 	return res
 }
 
+func (s *StringStack) Contains(val string) bool {
+	for _, str := range *s {
+		if str == val {
+			return true
+		}
+	}
+	return false
+}
+
 type path struct {
-	nodes   stack
-	start   *node
-	cur     *node
-	bound   int
+	nodes StringStack
+	start *node
+	cur   *node
+	bound int
 }
 
 var DrawIntermediate func(puzzle *Puzzle)
@@ -50,10 +59,10 @@ func (puzzle *Puzzle) FindShortestSolution() []Position {
 		cost:   0,
 	}
 	path := &path{
-		start:   start,
-		cur:     start,
-		bound:   start.estimatedCostToGoal(),
-		nodes: stack{start.puzzle.Binary()},
+		start: start,
+		cur:   start,
+		bound: start.estimatedCostToGoal(),
+		nodes: StringStack{start.puzzle.Bytes()},
 	}
 
 	found := path.idaStar()
@@ -84,15 +93,6 @@ func (p *path) idaStar() bool {
 	}
 }
 
-func (p *path) contains(n *node) bool {
-	for _, str := range p.nodes {
-		if str == n.puzzle.Binary() {
-			return true
-		}
-	}
-	return false
-}
-
 const Found = -1
 const NotFound = 2 << 30
 
@@ -106,14 +106,14 @@ func (p *path) search() int {
 	min := NotFound
 	prevCur := p.cur
 	for _, succ := range p.cur.successors() {
-		if p.contains(succ) {
+		if p.nodes.Contains(succ.puzzle.Bytes()) {
 			continue
 		}
 		p.cur = succ
 		if DrawIntermediate != nil {
 			DrawIntermediate(p.cur.puzzle)
 		}
-		p.nodes.Push(p.cur.puzzle.Binary())
+		p.nodes.Push(p.cur.puzzle.Bytes())
 		t := p.search()
 		if t == Found {
 			return Found

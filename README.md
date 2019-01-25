@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/tulir/fifteen.svg?branch=master)](https://travis-ci.org/tulir/fifteen)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d8575cfd2ecbeaebc4c3/maintainability)](https://codeclimate.com/github/tulir/fifteen/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d8575cfd2ecbeaebc4c3/test_coverage)](https://codeclimate.com/github/tulir/fifteen/test_coverage)
+[![GoDoc Reference](https://godoc.org/maunium.net/go/fifteen/fifteen?status.svg)](http://godoc.org/maunium.net/go/fifteen/fifteen)
 
 Data structures and algorithms project, 15-puzzle solver. Written in Go.
 
