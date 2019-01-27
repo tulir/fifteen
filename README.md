@@ -12,21 +12,46 @@ Data structures and algorithms project, 15-puzzle solver. Written in Go.
 ## Instructions
 ### Installation
 0. Install [Go](https://golang.org/) 1.11 or higher
-1. Clone the repository (`git clone git@github.com:tulir/fifteen.git`)
-2. Fetch dependencies and compile with `go get`
+1. Clone the repository with `git clone https://github.com/tulir/fifteen.git`
+2. Fetch dependencies and compile with `go build`
 
-The compiled binary should now exist at `$GOPATH/bin/fifteen`. `$GOPATH`
-defaults to `$HOME/go`. You can now `go install` to recompile the binary at
-`$GOPATH/bin/fifteen` or `go build` to create a binary in your working
-directory.
-
-You should run `go get` again after pulling changes from Git to make sure
-dependencies are up to date.
+To update, simply pull changes and `go build` again.
 
 ### Usage
-TODO 
+Run with `./fifteen <flags>` after building as specified in previous section.
+See `./fifteen --help` for a list of flags.
 
-### Running tests
+#### Puzzle size
+Puzzle size can be set with `-w <size>`. Size must be between 3 and 15 (inclusive).
+
+#### Random puzzles
+Shuffled (`-r shuffle -n <moves>`) or randomized (`-r random`). If `-n <moves>`
+is specified without specifying the randomization mode with `-r`, `shuffle` is
+assumed. If `-r random` is specified, `-n <moves>` is no-op.
+
+Note that `-r random` puzzles are generally much harder to solve than puzzles
+shuffled with a low number (<200) of moves.
+
+Randomization means generating a completely random array and swapping values
+until the puzzle is solvable. Shuffling starts with a solved puzzle and makes
+the given number of random moves.
+
+Seed for randomizer can be set with `-s <seed>`. Seed is set to current unix
+time in nanoseconds if not specified.
+
+#### Animated steps
+Animate solution in a ncurses-like UI after solving (`-a solution`) or render
+each node entered in the IDA* algorithm (`-a steps`).
+
+Duration of animated solution can be set with `-d <seconds>`.
+
+#### I/O
+Input file can be set with `-i <path>` and output file can be set with `-o <path>`.
+Output defaults to stdout. Either input or randomization mode must be specified.
+Output format can be set with `-f <format>` where `<format>` is either `text` or
+`json`. Defaults to `text`.
+
+### Tests
 Run tests and output coverage results:
 ```bash
 go test ./... -coverprofile=coverage.out
