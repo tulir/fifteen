@@ -20,18 +20,22 @@ import (
 	"fmt"
 )
 
+// StringStack is a string array with additional methods to use it like a stack.
 type StringStack []string
 
+// Push pushes the given string to the top of the stack.
 func (s *StringStack) Push(v string) {
 	*s = append(*s, v)
 }
 
+// Pop removes and returns the element at the top of the stack.
 func (s *StringStack) Pop() string {
 	res := (*s)[len(*s)-1]
 	*s = (*s)[:len(*s)-1]
 	return res
 }
 
+// Contains checks if the stack contains the given value.
 func (s *StringStack) Contains(val string) bool {
 	for _, str := range *s {
 		if str == val {
@@ -84,26 +88,26 @@ func (puzzle *Puzzle) FindShortestSolution() []Position {
 func (p *path) idaStar() bool {
 	for {
 		t := p.search()
-		if t == Found {
+		if t == idaFound {
 			return true
-		} else if t == NotFound {
+		} else if t == idaNotFound {
 			return false
 		}
 		p.bound = t
 	}
 }
 
-const Found = -1
-const NotFound = 2 << 30
+const idaFound = -1
+const idaNotFound = 2 << 30
 
 func (p *path) search() int {
 	estimatedCost := p.cur.cost + p.cur.estimatedCostToGoal()
 	if estimatedCost > p.bound {
 		return estimatedCost
 	} else if p.cur.puzzle.IsSolved() {
-		return Found
+		return idaFound
 	}
-	min := NotFound
+	min := idaNotFound
 	prevCur := p.cur
 	for _, succ := range p.cur.successors() {
 		if p.nodes.Contains(succ.puzzle.Bytes()) {
@@ -115,8 +119,8 @@ func (p *path) search() int {
 		}
 		p.nodes.Push(p.cur.puzzle.Bytes())
 		t := p.search()
-		if t == Found {
-			return Found
+		if t == idaFound {
+			return idaFound
 		} else if t < min {
 			min = t
 		}
@@ -129,6 +133,10 @@ func (p *path) search() int {
 	return min
 }
 
+// node is a node in the IDA* search stack.
+//
+// It contains the puzzle state, cost to reach the state, the move made from
+// the previous state and a pointer to the previous node.
 type node struct {
 	puzzle *Puzzle
 	prev   *node
@@ -136,6 +144,7 @@ type node struct {
 	cost   int
 }
 
+// successors returns the list of states that can follow the state in the node.
 func (n *node) successors() (nodes []*node) {
 	for _, move := range n.puzzle.GetValidMoves() {
 		newPuzzle := n.puzzle.Copy()
@@ -152,6 +161,7 @@ func (n *node) successors() (nodes []*node) {
 	return
 }
 
+// estimatedCostToGoal is the heuristic used by the (ID)A* algorithm.
 func (n *node) estimatedCostToGoal() int {
 	return n.puzzle.ManhattanDistance()
 }

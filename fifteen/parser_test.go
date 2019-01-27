@@ -33,6 +33,13 @@ func TestParsePuzzle_Valid(t *testing.T) {
 	assert.Equal(t, puzzle.data, []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0})
 }
 
+func TestParsePuzzle_TooSmall(t *testing.T) {
+	puzzle, err := ParsePuzzle("1 2\n3 0")
+	assert.Nil(t, puzzle)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "too small")
+}
+
 func TestParsePuzzle_SizeMismatch(t *testing.T) {
 	puzzle, err := ParsePuzzle(
 		"1 2 3 4\n" +

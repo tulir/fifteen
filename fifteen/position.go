@@ -31,6 +31,8 @@ func (pos Position) Valid(size int) bool {
 	return pos.X >= 1 && pos.Y >= 1 && pos.X <= size && pos.Y <= size
 }
 
+// AllMoves returns all four moves from this position. No checks are done to ensure the validity of the moves.
+// Use the ValidMoves method to get valid moves from this position.
 func (pos Position) AllMoves() (Position, Position, Position, Position) {
 	return Position{pos.X - 1, pos.Y},
 		Position{pos.X + 1, pos.Y},
@@ -38,11 +40,13 @@ func (pos Position) AllMoves() (Position, Position, Position, Position) {
 		Position{pos.X, pos.Y + 1}
 }
 
+// AllMovesArray returns the output of AllMoves() as a fixed-length array instead of four return values.
 func (pos Position) AllMovesArray() [4]Position {
 	a, b, c, d := pos.AllMoves()
 	return [4]Position{a, b, c, d}
 }
 
+// ValidMoves returns the valid moves from this position on a puzzle of the given size.
 func (pos Position) ValidMoves(n int) (validMoves []Position) {
 	for _, move := range pos.AllMovesArray() {
 		if move.Valid(n) {
@@ -52,6 +56,7 @@ func (pos Position) ValidMoves(n int) (validMoves []Position) {
 	return
 }
 
+// String returns the coordinates of this position in a string.
 func (pos Position) String() string {
 	return fmt.Sprintf("%d, %d", pos.X, pos.Y)
 }

@@ -19,6 +19,7 @@ package fifteen
 // HasAllNumbers checks if the puzzle contains all integers from 0 to the size of the puzzle.
 // 0 is included, as it represents the empty spot and is required for the puzzle to be valid.
 func (puzzle *Puzzle) HasAllNumbers() bool {
+	// TODO this method might not be needed as Solvable() does this check as well.
 	found := make([]bool, puzzle.n*puzzle.n)
 	for _, val := range puzzle.data {
 		if val < 0 || val >= puzzle.n*puzzle.n || found[val] {
@@ -36,6 +37,7 @@ func (puzzle *Puzzle) HasAllNumbers() bool {
 // Space complexity: O(1)
 func (puzzle *Puzzle) Solvable() bool {
 	var inversions, blankSpotRow int
+	// We embed the code from HasAllNumbers here to reduce time used from 2*n to n
 	found := make([]bool, puzzle.n*puzzle.n)
 	for i, val := range puzzle.data {
 		if val < 0 || val >= puzzle.n*puzzle.n || found[val] {

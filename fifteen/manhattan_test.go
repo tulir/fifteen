@@ -22,12 +22,12 @@ import (
 )
 
 func TestPuzzle_ManhattanDistance_Solved(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.Zero(t, puzzle.ManhattanDistance())
 }
 
 func TestPuzzle_ManhattanDistance_ThreeMoves(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	puzzle.Move(4, 3)
 	puzzle.Move(3, 3)
 	puzzle.Move(3, 4)

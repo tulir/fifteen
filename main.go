@@ -74,9 +74,9 @@ func main() {
 
 	var puzzle *fifteen.Puzzle
 	if *randomize == "random" {
-		puzzle = fifteen.NewRandomPuzzle(*size)
+		puzzle, _ = fifteen.NewRandomPuzzle(*size)
 	} else if len(*input) == 0 {
-		puzzle = fifteen.NewSolvedPuzzle(*size)
+		puzzle, _ = fifteen.NewSolvedPuzzle(*size)
 	} else {
 		data, err := ioutil.ReadFile(*input)
 		if err != nil {

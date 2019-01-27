@@ -25,7 +25,7 @@ import (
 func TestNewRandomPuzzle(t *testing.T) {
 	// Seed chosen so that the initial randomization won't provide a solvable puzzle.
 	rand.Seed(1236)
-	puzzle := NewRandomPuzzle(4)
+	puzzle, _ := NewRandomPuzzle(4)
 	assert.Equal(t, [][]int{
 		{2, 12, 5, 15},
 		{9, 14, 1, 13},
@@ -36,7 +36,7 @@ func TestNewRandomPuzzle(t *testing.T) {
 }
 
 func TestPuzzle_Shuffle(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.True(t, puzzle.Solvable())
 	assert.True(t, puzzle.IsSolved())
 	puzzle.Shuffle(200)

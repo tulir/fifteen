@@ -25,7 +25,10 @@ import (
 // ParsePuzzle parses a integer grid from a string into a puzzle.
 func ParsePuzzle(input string) (*Puzzle, error) {
 	rows := strings.Split(strings.TrimSpace(input), "\n")
-	puzzle := NewPuzzle(len(rows))
+	puzzle, err := NewPuzzle(len(rows))
+	if err != nil {
+		return nil, err
+	}
 	for y, row := range rows {
 		cells := strings.Fields(row)
 		if len(cells) != len(rows) {

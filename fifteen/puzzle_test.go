@@ -22,7 +22,7 @@ import (
 )
 
 func TestNewPuzzle(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	assert.NotNil(t, puzzle)
 	assert.Len(t, puzzle.data, 16)
 	for _, val := range puzzle.data {
@@ -30,8 +30,30 @@ func TestNewPuzzle(t *testing.T) {
 	}
 }
 
+func TestNewPuzzle_TooSmall(t *testing.T) {
+	puzzle, err := NewPuzzle(2)
+	assert.Nil(t, puzzle)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "too small")
+	puzzle, err = NewRandomPuzzle(-1)
+	assert.Nil(t, puzzle)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "too small")
+}
+
+func TestNewPuzzle_TooLarge(t *testing.T) {
+	puzzle, err := NewPuzzle(16)
+	assert.Nil(t, puzzle)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "too large")
+	puzzle, err = NewSolvedPuzzle(256)
+	assert.Nil(t, puzzle)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "too large")
+}
+
 func TestNewSolvedPuzzle(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.NotNil(t, puzzle)
 	assert.Len(t, puzzle.data, 16)
 	for i, val := range puzzle.data {
@@ -44,7 +66,7 @@ func TestNewSolvedPuzzle(t *testing.T) {
 }
 
 func TestPuzzle_Copy(t *testing.T) {
-	puzzle1 := NewPuzzle(4)
+	puzzle1, _ := NewPuzzle(4)
 	puzzle2 := puzzle1.Copy()
 	assert.Zero(t, puzzle1.data[10])
 	assert.Zero(t, puzzle2.data[10])
@@ -54,7 +76,7 @@ func TestPuzzle_Copy(t *testing.T) {
 }
 
 func TestPuzzle_Get(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.Equal(t, 5, puzzle.Get(1, 2))
 	assert.Equal(t, 0, puzzle.Get(4, 4))
 	assert.Equal(t, 1, puzzle.Get(1, 1))
@@ -65,7 +87,7 @@ func TestPuzzle_Get(t *testing.T) {
 }
 
 func TestPuzzle_Set(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	for _, val := range puzzle.data {
 		assert.Zero(t, val)
 	}
@@ -78,7 +100,7 @@ func TestPuzzle_Set(t *testing.T) {
 }
 
 func TestPuzzle_Coordinates(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	// Indices:
 	//  0  1  2  3
 	//  4  5  6  7
@@ -99,7 +121,7 @@ func TestPuzzle_Coordinates(t *testing.T) {
 }
 
 func TestPuzzle_Move(t *testing.T) {
-	puzzle := NewSolvedPuzzle(4)
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.False(t, puzzle.Move(-1, -1))
 	assert.True(t, puzzle.Move(3, 4))
 	assert.Zero(t, puzzle.Get(3, 4))
@@ -117,12 +139,14 @@ func TestPuzzle_Move(t *testing.T) {
 }
 
 func TestPuzzle_Size(t *testing.T) {
-	assert.Equal(t, 50, NewPuzzle(50).Size())
-	assert.Equal(t, 25, NewSolvedPuzzle(25).Size())
+	puzzle, _ := NewPuzzle(14)
+	assert.Equal(t, 14, puzzle.Size())
+	puzzle, _ = NewSolvedPuzzle(12)
+	assert.Equal(t, 12, puzzle.Size())
 }
 
 func TestPuzzle_SetData(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	assert.Equal(t, 0, puzzle.Get(2, 3))
 	assert.Equal(t, []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, puzzle.data)
 	err := puzzle.SetData([][]int{
@@ -137,7 +161,7 @@ func TestPuzzle_SetData(t *testing.T) {
 }
 
 func TestPuzzle_SetData_InvalidWidth(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	err := puzzle.SetData([][]int{
 		{7, 4, 3, 8},
 		{1, 12, 2, 9, 16},
@@ -149,7 +173,7 @@ func TestPuzzle_SetData_InvalidWidth(t *testing.T) {
 }
 
 func TestPuzzle_SetData_InvalidHeight(t *testing.T) {
-	puzzle := NewPuzzle(4)
+	puzzle, _ := NewPuzzle(4)
 	err := puzzle.SetData([][]int{
 		{7, 4, 3, 8},
 		{1, 12, 2, 9},
@@ -162,17 +186,19 @@ func TestPuzzle_SetData_InvalidHeight(t *testing.T) {
 }
 
 func TestPuzzle_Data(t *testing.T) {
+	puzzle, _ := NewSolvedPuzzle(4)
 	assert.Equal(t, [][]int{
 		{1, 2, 3, 4},
 		{5, 6, 7, 8},
 		{9, 10, 11, 12},
 		{13, 14, 15, 0},
-	}, NewSolvedPuzzle(4).Data())
+	}, puzzle.Data())
+	puzzle, _ = NewPuzzle(5)
 	assert.Equal(t, [][]int{
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0},
-	}, NewPuzzle(5).Data())
+	}, puzzle.Data())
 }

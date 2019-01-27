@@ -18,7 +18,6 @@ package fifteen
 
 import (
 	"bytes"
-	"encoding/binary"
 	"fmt"
 	"strconv"
 	"strings"
@@ -54,29 +53,16 @@ func (puzzle *Puzzle) String() string {
 
 func (puzzle *Puzzle) Bytes() string {
 	var builder bytes.Buffer
-	if len(puzzle.data) > 254 {
-		separator := []byte{0, 0, 0, 0}
-		builder.WriteByte(0)
-		builder.WriteByte(1)
-		for _, val := range puzzle.data {
-			if val == 0 {
-				builder.Write([]byte{255, 255, 255, 255})
-			} else {
-				_ = binary.Write(&builder, binary.LittleEndian, val)
-			}
-			builder.Write(separator)
+	builder.WriteString("MAU15P")
+	builder.WriteByte(0)
+	builder.WriteByte(0)
+	for _, val := range puzzle.data {
+		if val == 0 {
+			builder.WriteByte(255)
+		} else {
+			builder.WriteByte(byte(val))
 		}
-	} else {
 		builder.WriteByte(0)
-		builder.WriteByte(0)
-		for _, val := range puzzle.data {
-			if val == 0 {
-				builder.WriteByte(255)
-			} else {
-				builder.WriteByte(byte(val))
-			}
-			builder.WriteByte(0)
-		}
 	}
 	return builder.String()
 }

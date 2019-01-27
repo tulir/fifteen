@@ -28,27 +28,35 @@ type Puzzle struct {
 }
 
 // NewPuzzle creates a new blank puzzle.
-func NewPuzzle(n int) *Puzzle {
+func NewPuzzle(n int) (*Puzzle, error) {
+	if n < 3 {
+		return nil, errors.New("puzzle size too small")
+	} else if n > 15 {
+		return nil, errors.New("puzzle size too large")
+	}
 	return &Puzzle{
 		data: make([]int, n*n),
 		n:    n,
-	}
+	}, nil
 }
 
 // NewSolvedPuzzle creates a new puzzle in the finished form.
-func NewSolvedPuzzle(n int) *Puzzle {
-	puzzle := NewPuzzle(n)
+func NewSolvedPuzzle(n int) (*Puzzle, error) {
+	puzzle, err := NewPuzzle(n)
+	if err != nil {
+		return nil, err
+	}
 	for i := 1; i < len(puzzle.data); i++ {
 		puzzle.data[i-1] = i
 	}
 	puzzle.blank.X = 4
 	puzzle.blank.Y = 4
-	return puzzle
+	return puzzle, nil
 }
 
 // Copy creates a copy of this puzzle.
 func (puzzle *Puzzle) Copy() *Puzzle {
-	newPuzzle := NewPuzzle(puzzle.n)
+	newPuzzle, _ := NewPuzzle(puzzle.n)
 	copy(newPuzzle.data, puzzle.data)
 	newPuzzle.blank.X = puzzle.blank.X
 	newPuzzle.blank.Y = puzzle.blank.Y
@@ -111,6 +119,7 @@ func (puzzle *Puzzle) Move(x, y int) bool {
 	return true
 }
 
+// SetData sets the data of the puzzle from the given two-dimensional int array.
 func (puzzle *Puzzle) SetData(data [][]int) error {
 	if len(data) != puzzle.n {
 		return errors.New("invalid input height")
@@ -126,6 +135,7 @@ func (puzzle *Puzzle) SetData(data [][]int) error {
 	return nil
 }
 
+// Data returns the data of the puzzle as a two-dimensional int array.
 func (puzzle *Puzzle) Data() [][]int {
 	data := make([][]int, puzzle.n)
 	for i := 0; i < puzzle.n; i++ {
@@ -134,10 +144,13 @@ func (puzzle *Puzzle) Data() [][]int {
 	return data
 }
 
+// Size returns the size (width and height) of the puzzle.
 func (puzzle *Puzzle) Size() int {
 	return puzzle.n
 }
 
+// GetValidMoves returns the possible clicks in the current position of the puzzle.
+// Only works for valid puzzles. Does not work after SetData().
 func (puzzle *Puzzle) GetValidMoves() []Position {
 	return puzzle.blank.ValidMoves(puzzle.n)
 }
