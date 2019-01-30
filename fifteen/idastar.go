@@ -24,13 +24,6 @@ func (s *IntStack) Push(v int) {
 	*s = append(*s, v)
 }
 
-// Pop removes and returns the element at the top of the stack.
-func (s *IntStack) Pop() int {
-	res := (*s)[len(*s)-1]
-	*s = (*s)[:len(*s)-1]
-	return res
-}
-
 // Remove removes the element at the top of the stack.
 func (s *IntStack) Remove() {
 	*s = (*s)[:len(*s)-1]
@@ -46,11 +39,56 @@ func (s *IntStack) Contains(val int) bool {
 	return false
 }
 
+// linkedMove is an item in a LinkedMoveStack.
+type linkedMove struct {
+	prev *linkedMove
+	move Position
+	next *linkedMove
+}
+
+// LinkedMoveStack is a linked list of Positions that acts like a stack.
+type LinkedMoveStack struct {
+	start *linkedMove
+	end   *linkedMove
+	size  int
+}
+
+// Push adds the given position to this list.
+func (lml *LinkedMoveStack) Push(move Position) {
+	if lml.start == nil {
+		lml.start = &linkedMove{prev: nil, move: move, next: nil}
+		lml.end = lml.start
+	} else {
+		lml.end = &linkedMove{prev: lml.end, move: move, next: nil}
+		lml.end.prev.next = lml.end
+	}
+	lml.size++
+}
+
+// Pop pops the last position in the list.
+func (lml *LinkedMoveStack) Pop() {
+	lml.end = lml.end.prev
+	if lml.end == nil {
+		lml.start = nil
+	}
+	lml.size--
+}
+
+// Array converts this LinkedMoveStack into an array.
+func (lml *LinkedMoveStack) Array() (arr []Position) {
+	arr = make([]Position, lml.size)
+	i := 0
+	for move := lml.start; move != nil && i < lml.size; move = move.next {
+		arr[i] = move.move
+		i++
+	}
+	return
+}
+
 type path struct {
+	root  *Puzzle
 	nodes IntStack
-	start *node
-	cur   *node
-	bound int
+	moves LinkedMoveStack
 }
 
 var DrawIntermediate func(puzzle *Puzzle)
@@ -58,112 +96,65 @@ var DrawIntermediate func(puzzle *Puzzle)
 // FindShortestSolution uses the iterative deepening A* along with the manhattan distance as a heuristic
 // to find the least number of moves required to move the puzzle into the final position.
 func (puzzle *Puzzle) FindShortestSolution() []Position {
-	start := &node{
-		puzzle: puzzle.Copy(),
-		prev:   nil,
-		cost:   0,
-	}
 	path := &path{
-		start: start,
-		cur:   start,
-		bound: start.estimatedCostToGoal(),
-		nodes: IntStack{start.puzzle.Hash()},
+		root: puzzle.Copy(),
 	}
 
 	found := path.idaStar()
 	if !found {
 		return nil
 	}
-
-	solution := make([]Position, len(path.nodes)-1)
-	node := path.cur
-	i := len(solution)
-	for node != nil && node != path.start {
-		i--
-		solution[i] = node.move
-		node = node.prev
-	}
-	return solution
+	return path.moves.Array()
 }
 
 func (p *path) idaStar() bool {
+	bound := p.root.ManhattanDistance()
+	p.nodes = IntStack{p.root.Hash()}
+	p.moves = LinkedMoveStack{}
 	for {
-		t := p.search()
-		if t == idaFound {
+		bound = p.search(p.root, 0, bound)
+		if bound == idasFound {
 			return true
-		} else if t == idaNotFound {
+		} else if bound == idasNotFound {
 			return false
 		}
-		p.bound = t
 	}
 }
 
-const idaFound = -1
-const idaNotFound = 2 << 30
+const idasFound = -1
+const idasNotFound = 2 << 30
 
-func (p *path) search() int {
-	estimatedCost := p.cur.cost + p.cur.estimatedCostToGoal()
-	if estimatedCost > p.bound {
+func (p *path) search(puzzle *Puzzle, cost, bound int) int {
+	estimatedCost := cost + puzzle.ManhattanDistance()
+	if estimatedCost > bound {
 		return estimatedCost
-	} else if p.cur.puzzle.IsSolved() {
-		return idaFound
+	} else if puzzle.IsSolved() {
+		return idasFound
 	}
-	min := idaNotFound
-	prevCur := p.cur
-	for _, succ := range p.cur.successors() {
-		hash := succ.puzzle.Hash()
+	min := idasNotFound
+	for _, move := range puzzle.GetValidMoves() {
+		reverse := puzzle.Move(move.X, move.Y)
+		hash := puzzle.Hash()
 		if p.nodes.Contains(hash) {
 			continue
 		}
-		p.cur = succ
 		if DrawIntermediate != nil {
-			DrawIntermediate(p.cur.puzzle)
+			DrawIntermediate(puzzle)
 		}
 		p.nodes.Push(hash)
-		t := p.search()
-		if t == idaFound {
-			return idaFound
+		p.moves.Push(move)
+		t := p.search(puzzle, cost+1, bound)
+		if t == idasFound {
+			return idasFound
 		} else if t < min {
 			min = t
 		}
-		p.cur = prevCur
+		puzzle.Move(reverse.X, reverse.Y)
+		p.moves.Pop()
 		p.nodes.Remove()
 		if DrawIntermediate != nil {
-			DrawIntermediate(p.cur.puzzle)
+			DrawIntermediate(puzzle)
 		}
 	}
 	return min
-}
-
-// node is a node in the IDA* search stack.
-//
-// It contains the puzzle state, cost to reach the state, the move made from
-// the previous state and a pointer to the previous node.
-type node struct {
-	puzzle *Puzzle
-	prev   *node
-	move   Position
-	cost   int
-}
-
-// successors returns the list of states that can follow the state in the node.
-func (n *node) successors() (nodes []*node) {
-	moves := n.puzzle.GetValidMoves()
-	nodes = make([]*node, len(moves))
-	for i, move := range moves {
-		newPuzzle := n.puzzle.Copy()
-		newPuzzle.Move(move.X, move.Y)
-		nodes[i] = &node{
-			puzzle: newPuzzle,
-			prev:   n,
-			move:   move,
-			cost:   n.cost + 1,
-		}
-	}
-	return
-}
-
-// estimatedCostToGoal is the heuristic used by the (ID)A* algorithm.
-func (n *node) estimatedCostToGoal() int {
-	return n.puzzle.ManhattanDistance()
 }

@@ -94,15 +94,17 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 }
 
 // Move moves the piece at the given coordinates to the empty slot in the puzzle.
-func (puzzle *Puzzle) Move(x, y int) {
+func (puzzle *Puzzle) Move(x, y int) Position {
 	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return
 	}*/
 	from := puzzle.Index(x, y)
 	to := puzzle.Index(puzzle.blank.X, puzzle.blank.Y)
 	puzzle.data[from], puzzle.data[to] = puzzle.data[to], puzzle.data[from]
+	prevBlank := puzzle.blank
 	puzzle.blank.X = x
 	puzzle.blank.Y = y
+	return prevBlank
 }
 
 // SetData sets the data of the puzzle from the given two-dimensional int array.
