@@ -16,10 +16,6 @@
 
 package fifteen
 
-import (
-	"fmt"
-)
-
 // IntStack is a string array with additional methods to use it like a stack.
 type IntStack []int
 
@@ -156,9 +152,7 @@ func (n *node) successors() (nodes []*node) {
 	nodes = make([]*node, len(moves))
 	for i, move := range moves {
 		newPuzzle := n.puzzle.Copy()
-		if !newPuzzle.Move(move.X, move.Y) {
-			fmt.Println("Move", move, "failed!")
-		}
+		newPuzzle.Move(move.X, move.Y)
 		nodes[i] = &node{
 			puzzle: newPuzzle,
 			prev:   n,

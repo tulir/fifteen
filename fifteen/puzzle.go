@@ -58,24 +58,23 @@ func NewSolvedPuzzle(n int) (*Puzzle, error) {
 func (puzzle *Puzzle) Copy() *Puzzle {
 	newPuzzle, _ := NewPuzzle(puzzle.n)
 	copy(newPuzzle.data, puzzle.data)
-	newPuzzle.blank.X = puzzle.blank.X
-	newPuzzle.blank.Y = puzzle.blank.Y
+	newPuzzle.blank = puzzle.blank
 	return newPuzzle
 }
 
 // Get gets the value of a specific slot.
 func (puzzle *Puzzle) Get(x, y int) int {
-	if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
+	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return -1
-	}
+	}*/
 	return puzzle.data[puzzle.Index(x, y)]
 }
 
 // Set sets the value of a specific slot.
 func (puzzle *Puzzle) Set(x, y, val int) {
-	if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
+	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
 		return
-	}
+	}*/
 	if val == 0 {
 		puzzle.blank = Position{x, y}
 	}
@@ -94,16 +93,16 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 	return
 }
 
-// Move moves the piece at the given coordinates to the empty slot next to it.
-// Return false if there is no empty slot next to the given coordinates or if the coordinates are invalid.
-// Returns true if the move was successful.
-func (puzzle *Puzzle) Move(x, y int) bool {
+// Move moves the piece at the given coordinates to the empty slot in the puzzle.
+func (puzzle *Puzzle) Move(x, y int) {
+	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
+		return
+	}*/
 	from := puzzle.Index(x, y)
 	to := puzzle.Index(puzzle.blank.X, puzzle.blank.Y)
 	puzzle.data[from], puzzle.data[to] = puzzle.data[to], puzzle.data[from]
 	puzzle.blank.X = x
 	puzzle.blank.Y = y
-	return true
 }
 
 // SetData sets the data of the puzzle from the given two-dimensional int array.

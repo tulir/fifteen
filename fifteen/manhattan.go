@@ -21,12 +21,22 @@ package fifteen
 //
 // Time complexity:  O(n)
 // Space complexity: O(1)
-func (puzzle *Puzzle) ManhattanDistance() int {
-	var sum int
-	for i, val := range puzzle.data {
-		sum += puzzle.manhattanDistance(i, val)
+func (puzzle *Puzzle) ManhattanDistance() (sum int) {
+	pX, pY := 1, 1
+	var tX, tY int
+	for _, val := range puzzle.data {
+		if val == 0 {
+			val = puzzle.n * puzzle.n
+		}
+		tX, tY = puzzle.Coordinates(val - 1)
+		sum += abs(pX - tX) + abs(pY - tY)
+		pX++
+		if pX > puzzle.n {
+			pX = 1
+			pY++
+		}
 	}
-	return sum
+	return
 }
 
 func abs(x int) int {
@@ -34,14 +44,4 @@ func abs(x int) int {
 		return -x
 	}
 	return x
-}
-
-func (puzzle *Puzzle) manhattanDistance(position, value int) int {
-	if value == 0 {
-		// Calculate empty slot as last value
-		value = puzzle.n * puzzle.n
-	}
-	pX, pY := puzzle.Coordinates(position)
-	tX, tY := puzzle.Coordinates(value-1)
-	return abs(pX - tX) + abs(pY - tY)
 }

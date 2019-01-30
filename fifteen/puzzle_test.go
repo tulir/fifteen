@@ -122,18 +122,16 @@ func TestPuzzle_Coordinates(t *testing.T) {
 
 func TestPuzzle_Move(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
-	assert.False(t, puzzle.Move(-1, -1))
-	assert.True(t, puzzle.Move(3, 4))
+	puzzle.Move(3, 4)
 	assert.Zero(t, puzzle.Get(3, 4))
 	assert.Equal(t, 15, puzzle.Get(4, 4))
-	assert.False(t, puzzle.Move(3, 4))
-	assert.True(t, puzzle.Move(3, 3))
+	puzzle.Move(3, 3)
 	assert.Zero(t, puzzle.Get(3, 3))
 	assert.Equal(t, 11, puzzle.Get(3, 4))
-	assert.True(t, puzzle.Move(4, 3))
+	puzzle.Move(4, 3)
 	assert.Zero(t, puzzle.Get(4, 3))
 	assert.Equal(t, 12, puzzle.Get(3, 3))
-	assert.True(t, puzzle.Move(4, 4))
+	puzzle.Move(4, 4)
 	assert.Zero(t, puzzle.Get(4, 4))
 	assert.Equal(t, 15, puzzle.Get(4, 3))
 }
