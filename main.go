@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"os"
+	"runtime/pprof"
 	"time"
 
 	flag "maunium.net/go/mauflag"
@@ -39,6 +40,7 @@ var animateFormat = flag.MakeFull("a", "animate", "Animation format. One of: sol
 var animateTime = flag.MakeFull("d", "duration", "Animation duration (only applicable for solution animation", "10").Int()
 var randomSeed = flag.MakeFull("s", "seed", "Seed for randomization. Defaults to current time", "-1").Int64()
 var size = flag.MakeFull("w", "size", "Size of game. Only applicable when generating puzzle.", "4").Int()
+var profile = flag.MakeFull("p", "profile", "File to write CPU profile to", "").String()
 var wantHelp, _ = flag.MakeHelpFlag()
 
 type JSONInput [][]int
@@ -120,7 +122,19 @@ func main() {
 	if *animateFormat == "steps" {
 		solution = solveAnimated(puzzle)
 	} else {
+		if len(*profile) > 0 {
+			file, err := os.OpenFile(*profile, os.O_CREATE|os.O_WRONLY, 0644)
+			if err != nil {
+				stderr("Failed to open profile file:", err)
+				return
+			}
+			err = pprof.StartCPUProfile(file)
+			if err != nil {
+				stderr("Failed to start profiling:", err)
+			}
+		}
 		duration, solution = solveBenchmark(puzzle)
+		pprof.StopCPUProfile()
 	}
 
 	if *animateFormat == "solution" {

@@ -48,9 +48,18 @@ func (pos Position) AllMovesArray() [4]Position {
 
 // ValidMoves returns the valid moves from this position on a puzzle of the given size.
 func (pos Position) ValidMoves(n int) (validMoves []Position) {
+	moveCount := 4
+	if pos.X == 1 || pos.X == n {
+		moveCount--
+	}
+	if pos.Y == 1 || pos.Y == n {
+		moveCount--
+	}
+	validMoves = make([]Position, moveCount)
 	for _, move := range pos.AllMovesArray() {
 		if move.Valid(n) {
-			validMoves = append(validMoves, move)
+			moveCount--
+			validMoves[moveCount] = move
 		}
 	}
 	return

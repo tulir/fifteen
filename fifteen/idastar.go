@@ -20,23 +20,28 @@ import (
 	"fmt"
 )
 
-// StringStack is a string array with additional methods to use it like a stack.
-type StringStack []string
+// IntStack is a string array with additional methods to use it like a stack.
+type IntStack []int
 
 // Push pushes the given string to the top of the stack.
-func (s *StringStack) Push(v string) {
+func (s *IntStack) Push(v int) {
 	*s = append(*s, v)
 }
 
 // Pop removes and returns the element at the top of the stack.
-func (s *StringStack) Pop() string {
+func (s *IntStack) Pop() int {
 	res := (*s)[len(*s)-1]
 	*s = (*s)[:len(*s)-1]
 	return res
 }
 
+// Remove removes the element at the top of the stack.
+func (s *IntStack) Remove() {
+	*s = (*s)[:len(*s)-1]
+}
+
 // Contains checks if the stack contains the given value.
-func (s *StringStack) Contains(val string) bool {
+func (s *IntStack) Contains(val int) bool {
 	for _, str := range *s {
 		if str == val {
 			return true
@@ -46,7 +51,7 @@ func (s *StringStack) Contains(val string) bool {
 }
 
 type path struct {
-	nodes StringStack
+	nodes IntStack
 	start *node
 	cur   *node
 	bound int
@@ -66,7 +71,7 @@ func (puzzle *Puzzle) FindShortestSolution() []Position {
 		start: start,
 		cur:   start,
 		bound: start.estimatedCostToGoal(),
-		nodes: StringStack{start.puzzle.Bytes()},
+		nodes: IntStack{start.puzzle.Hash()},
 	}
 
 	found := path.idaStar()
@@ -110,14 +115,15 @@ func (p *path) search() int {
 	min := idaNotFound
 	prevCur := p.cur
 	for _, succ := range p.cur.successors() {
-		if p.nodes.Contains(succ.puzzle.Bytes()) {
+		hash := succ.puzzle.Hash()
+		if p.nodes.Contains(hash) {
 			continue
 		}
 		p.cur = succ
 		if DrawIntermediate != nil {
 			DrawIntermediate(p.cur.puzzle)
 		}
-		p.nodes.Push(p.cur.puzzle.Bytes())
+		p.nodes.Push(hash)
 		t := p.search()
 		if t == idaFound {
 			return idaFound
@@ -125,7 +131,7 @@ func (p *path) search() int {
 			min = t
 		}
 		p.cur = prevCur
-		p.nodes.Pop()
+		p.nodes.Remove()
 		if DrawIntermediate != nil {
 			DrawIntermediate(p.cur.puzzle)
 		}
@@ -146,17 +152,19 @@ type node struct {
 
 // successors returns the list of states that can follow the state in the node.
 func (n *node) successors() (nodes []*node) {
-	for _, move := range n.puzzle.GetValidMoves() {
+	moves := n.puzzle.GetValidMoves()
+	nodes = make([]*node, len(moves))
+	for i, move := range moves {
 		newPuzzle := n.puzzle.Copy()
 		if !newPuzzle.Move(move.X, move.Y) {
 			fmt.Println("Move", move, "failed!")
 		}
-		nodes = append(nodes, &node{
+		nodes[i] = &node{
 			puzzle: newPuzzle,
 			prev:   n,
 			move:   move,
 			cost:   n.cost + 1,
-		})
+		}
 	}
 	return
 }

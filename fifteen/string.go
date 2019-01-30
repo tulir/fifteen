@@ -70,3 +70,10 @@ func (puzzle *Puzzle) Bytes() string {
 	}
 	return string(data)
 }
+
+func (puzzle *Puzzle) Hash() (hash int) {
+	for _, val := range puzzle.data {
+		hash = ((hash << 3) | (hash >> 29)) ^ val
+	}
+	return
+}

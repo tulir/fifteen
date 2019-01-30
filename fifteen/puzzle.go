@@ -98,22 +98,9 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 // Return false if there is no empty slot next to the given coordinates or if the coordinates are invalid.
 // Returns true if the move was successful.
 func (puzzle *Puzzle) Move(x, y int) bool {
-	val := puzzle.Get(x, y)
-	switch {
-	case x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n:
-		return false
-	case puzzle.Get(x-1, y) == 0:
-		puzzle.Set(x-1, y, val)
-	case puzzle.Get(x+1, y) == 0:
-		puzzle.Set(x+1, y, val)
-	case puzzle.Get(x, y-1) == 0:
-		puzzle.Set(x, y-1, val)
-	case puzzle.Get(x, y+1) == 0:
-		puzzle.Set(x, y+1, val)
-	default:
-		return false
-	}
-	puzzle.Set(x, y, 0)
+	from := puzzle.Index(x, y)
+	to := puzzle.Index(puzzle.blank.X, puzzle.blank.Y)
+	puzzle.data[from], puzzle.data[to] = puzzle.data[to], puzzle.data[from]
 	puzzle.blank.X = x
 	puzzle.blank.Y = y
 	return true

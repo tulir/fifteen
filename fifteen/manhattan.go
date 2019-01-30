@@ -18,6 +18,9 @@ package fifteen
 
 // ManhattanDistance returns the sum of the manhattan distances between the cells and their final positions.
 // This is used as the heuristic for the (ID)A* algorithm in the solver.
+//
+// Time complexity:  O(n)
+// Space complexity: O(1)
 func (puzzle *Puzzle) ManhattanDistance() int {
 	var sum int
 	for i, val := range puzzle.data {
