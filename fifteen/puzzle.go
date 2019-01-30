@@ -64,17 +64,17 @@ func (puzzle *Puzzle) Copy() *Puzzle {
 
 // Get gets the value of a specific slot.
 func (puzzle *Puzzle) Get(x, y int) int {
-	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
+	if x < 1 || y < 1 || x > puzzle.n || y > puzzle.n {
 		return -1
-	}*/
+	}
 	return puzzle.data[puzzle.Index(x, y)]
 }
 
 // Set sets the value of a specific slot.
 func (puzzle *Puzzle) Set(x, y, val int) {
-	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
+	if x < 1 || y < 1 || x > puzzle.n || y > puzzle.n {
 		return
-	}*/
+	}
 	if val == 0 {
 		puzzle.blank = Position{x, y}
 	}
@@ -95,9 +95,9 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 
 // Move moves the piece at the given coordinates to the empty slot in the puzzle.
 func (puzzle *Puzzle) Move(x, y int) Position {
-	/*if x <= 0 || y <= 0 || x > puzzle.n || y > puzzle.n {
-		return
-	}*/
+	if x < 1 || y < 1 || x > puzzle.n || y > puzzle.n {
+		return puzzle.blank
+	}
 	from := puzzle.Index(x, y)
 	to := puzzle.Index(puzzle.blank.X, puzzle.blank.Y)
 	puzzle.data[from], puzzle.data[to] = puzzle.data[to], puzzle.data[from]
