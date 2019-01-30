@@ -17,10 +17,10 @@
 package fifteen
 
 // IntStack is a string array with additional methods to use it like a stack.
-type IntStack []int
+type IntStack []uint64
 
 // Push pushes the given string to the top of the stack.
-func (s *IntStack) Push(v int) {
+func (s *IntStack) Push(v uint64) {
 	*s = append(*s, v)
 }
 
@@ -30,9 +30,9 @@ func (s *IntStack) Remove() {
 }
 
 // Contains checks if the stack contains the given value.
-func (s *IntStack) Contains(val int) bool {
-	for _, str := range *s {
-		if str == val {
+func (s *IntStack) Contains(val uint64) bool {
+	for _, i := range *s {
+		if i == val {
 			return true
 		}
 	}
@@ -133,9 +133,10 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 	}
 	min := idasNotFound
 	for _, move := range puzzle.GetValidMoves() {
-		reverse := puzzle.Move(move.X, move.Y)
+		reverse := puzzle.MovePos(move)
 		hash := puzzle.Hash()
 		if p.nodes.Contains(hash) {
+			puzzle.MovePos(reverse)
 			continue
 		}
 		if DrawIntermediate != nil {
@@ -144,12 +145,12 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 		p.nodes.Push(hash)
 		p.moves.Push(move)
 		t := p.search(puzzle, cost+1, bound)
+		puzzle.MovePos(reverse)
 		if t == idasFound {
 			return idasFound
 		} else if t < min {
 			min = t
 		}
-		puzzle.Move(reverse.X, reverse.Y)
 		p.moves.Pop()
 		p.nodes.Remove()
 		if DrawIntermediate != nil {

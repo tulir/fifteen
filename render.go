@@ -134,7 +134,7 @@ func animateSolution(puzzle *fifteen.Puzzle, moves []fifteen.Position, delay tim
 	time.Sleep(1 * time.Second)
 	for _, move := range moves {
 		time.Sleep(delay)
-		puzzle.Move(move.X, move.Y)
+		puzzle.MovePos(move)
 		renderPuzzle(screen, puzzle)
 	}
 	time.Sleep(2 * time.Second)

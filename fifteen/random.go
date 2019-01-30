@@ -56,6 +56,6 @@ func (puzzle *Puzzle) Shuffle(moves int) {
 			}
 		}
 		pos = validMoves[rand.Intn(len(validMoves))]
-		puzzle.Move(pos.X, pos.Y)
+		puzzle.MovePos(pos)
 	}
 }

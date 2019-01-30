@@ -25,7 +25,7 @@ func TestPuzzle_String_3(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(3)
 	assert.Equal(t, `1 2 3
 4 5 6
-7 8  `, puzzle.String())
+7 8 -`, puzzle.String())
 }
 
 func TestPuzzle_String_4(t *testing.T) {
@@ -33,7 +33,7 @@ func TestPuzzle_String_4(t *testing.T) {
 	assert.Equal(t, ` 1  2  3  4
  5  6  7  8
  9 10 11 12
-13 14 15   `, puzzle.String())
+13 14 15  -`, puzzle.String())
 }
 
 func TestPuzzle_String_5(t *testing.T) {
@@ -42,7 +42,7 @@ func TestPuzzle_String_5(t *testing.T) {
  6  7  8  9 10
 11 12 13 14 15
 16 17 18 19 20
-21 22 23 24   `, puzzle.String())
+21 22 23 24  -`, puzzle.String())
 }
 
 func TestPuzzle_String_11(t *testing.T) {
@@ -57,14 +57,15 @@ func TestPuzzle_String_11(t *testing.T) {
  78  79  80  81  82  83  84  85  86  87  88
  89  90  91  92  93  94  95  96  97  98  99
 100 101 102 103 104 105 106 107 108 109 110
-111 112 113 114 115 116 117 118 119 120    `, puzzle.String())
+111 112 113 114 115 116 117 118 119 120   -`, puzzle.String())
 }
 
-func TestPuzzle_Binary(t *testing.T) {
+func TestPuzzle_Hash_4(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
-	assert.Equal(t, "MAU15P" + string([]byte{0, 0,
-		1, 0, 2, 0, 3, 0, 4, 0,
-		5, 0, 6, 0, 7, 0, 8, 0,
-		9, 0, 10, 0, 11, 0, 12, 0,
-		13, 0, 14, 0, 15, 0, 255, 0}), puzzle.Bytes())
+	assert.Equal(t, uint64(0x7c84dc9477851775), puzzle.Hash())
+}
+
+func TestPuzzle_Hash_11(t *testing.T) {
+	puzzle, _ := NewSolvedPuzzle(11)
+	assert.Equal(t, uint64(0xbae28509ef48216f), puzzle.Hash())
 }

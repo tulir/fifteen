@@ -35,7 +35,12 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 			return nil, fmt.Errorf("size mismatch: row %d has a different amount columns than the input has rows", y)
 		}
 		for x, cell := range cells {
-			val, err := strconv.Atoi(cell)
+			var val int
+			if cell == "-" {
+				val = 0
+			} else {
+				val, err = strconv.Atoi(cell)
+			}
 			if err != nil {
 				return nil, fmt.Errorf("parse error at row %d column %d: %v", y, x, err)
 			} else if val >= puzzle.n*puzzle.n {

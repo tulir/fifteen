@@ -107,6 +107,11 @@ func (puzzle *Puzzle) Move(x, y int) Position {
 	return prevBlank
 }
 
+// MovePos moves the piece at the given Position to the empty slot in the puzzle.
+func (puzzle *Puzzle) MovePos(pos Position) Position {
+	return puzzle.Move(pos.X, pos.Y)
+}
+
 // SetData sets the data of the puzzle from the given two-dimensional int array.
 func (puzzle *Puzzle) SetData(data [][]int) error {
 	if len(data) != puzzle.n {

@@ -28,6 +28,7 @@ func Digits(i int) (count int) {
 	return count
 }
 
+// String converts the puzzle into a string.
 func (puzzle *Puzzle) String() string {
 	maxLen := Digits(len(puzzle.data) - 1)
 	outLen := len(puzzle.data)*(maxLen+1) - 1
@@ -45,6 +46,8 @@ func (puzzle *Puzzle) String() string {
 		}
 		if val != 0 {
 			dataPtr += copy(data[dataPtr:], strconv.Itoa(val))
+		} else {
+			data[dataPtr-1] = '-'
 		}
 		if (i+1)%puzzle.n != 0 {
 			data[dataPtr] = ' '
@@ -54,26 +57,17 @@ func (puzzle *Puzzle) String() string {
 	return string(data)
 }
 
-func (puzzle *Puzzle) Bytes() string {
-	var data = make([]byte, 8+len(puzzle.data)*2)
-	copy(data[0:6], "MAU15P")
-	data[7] = 0
-	data[8] = 0
-	const prefixLen = 8
-	for i, val := range puzzle.data {
-		if val == 0 {
-			data[prefixLen+i*2] = 255
-		} else {
-			data[prefixLen+i*2] = byte(val)
-		}
-		data[prefixLen+i*2+1] = 0
-	}
-	return string(data)
-}
+const fnvOffsetBasis = 14695981039346656037
+const fnvPrime = 1099511628211
 
-func (puzzle *Puzzle) Hash() (hash int) {
+// Hash calculates the FNV-1 hash of puzzle data.
+//
+// See https://en.wikipedia.org/wiki/FNV_hash_function
+func (puzzle *Puzzle) Hash() (hash uint64) {
+	hash = fnvOffsetBasis
 	for _, val := range puzzle.data {
-		hash = ((hash << 3) | (hash >> 29)) ^ val
+		hash *= fnvPrime
+		hash ^= uint64(val)
 	}
 	return
 }

@@ -21,34 +21,6 @@ import (
 	"testing"
 )
 
-func TestPuzzle_HasAllNumbers_Solved(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	assert.True(t, puzzle.HasAllNumbers())
-}
-
-func TestPuzzle_HasAllNumbers_AlmostValid(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	puzzle.Set(3, 3, 0)
-	assert.False(t, puzzle.HasAllNumbers())
-}
-
-func TestPuzzle_HasAllNumbers_OutOfRange1(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	puzzle.Set(3, 3, 16)
-	assert.False(t, puzzle.HasAllNumbers())
-}
-
-func TestPuzzle_HasAllNumbers_OutOfRange2(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	puzzle.Set(3, 3, -1)
-	assert.False(t, puzzle.HasAllNumbers())
-}
-
-func TestPuzzle_HasAllNumbers_BlankFail(t *testing.T) {
-	puzzle, _ := NewPuzzle(4)
-	assert.False(t, puzzle.HasAllNumbers())
-}
-
 func TestPuzzle_Solvable_Solved(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
 	assert.True(t, puzzle.Solvable())

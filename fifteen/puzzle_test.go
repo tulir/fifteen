@@ -136,6 +136,30 @@ func TestPuzzle_Move(t *testing.T) {
 	assert.Equal(t, 15, puzzle.Get(4, 3))
 }
 
+func TestPuzzle_Move_Reverse(t *testing.T) {
+	puzzle, _ := NewSolvedPuzzle(4)
+	rev0 := puzzle.Move(-1, -1)
+	assert.Equal(t, puzzle.blank, rev0)
+	rev1 := puzzle.Move(3, 4)
+	assert.False(t, puzzle.IsSolved())
+	rev2 := puzzle.Move(3, 3)
+	rev3 := puzzle.Move(3, 2)
+	rev4 := puzzle.Move(2, 2)
+	rev5 := puzzle.Move(1, 2)
+	rev6 := puzzle.Move(1, 3)
+	rev7 := puzzle.Move(1, 4)
+	assert.False(t, puzzle.IsSolved())
+	puzzle.MovePos(rev7)
+	puzzle.MovePos(rev6)
+	puzzle.MovePos(rev5)
+	puzzle.MovePos(rev4)
+	puzzle.MovePos(rev3)
+	puzzle.MovePos(rev2)
+	assert.False(t, puzzle.IsSolved())
+	puzzle.MovePos(rev1)
+	assert.True(t, puzzle.IsSolved())
+}
+
 func TestPuzzle_Size(t *testing.T) {
 	puzzle, _ := NewPuzzle(14)
 	assert.Equal(t, 14, puzzle.Size())
