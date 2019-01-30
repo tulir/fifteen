@@ -17,10 +17,7 @@
 package fifteen
 
 import (
-	"bytes"
-	"fmt"
 	"strconv"
-	"strings"
 )
 
 func Digits(i int) (count int) {
@@ -32,37 +29,44 @@ func Digits(i int) (count int) {
 }
 
 func (puzzle *Puzzle) String() string {
-	var builder strings.Builder
 	maxLen := Digits(len(puzzle.data) - 1)
-	format := "%" + strconv.Itoa(maxLen) + "d"
+	outLen := len(puzzle.data)*(maxLen+1) - 1
+	var data = make([]byte, outLen)
+	var dataPtr int
+
 	for i, val := range puzzle.data {
 		if i != 0 && i%puzzle.n == 0 {
-			builder.WriteRune('\n')
+			data[dataPtr] = '\n'
+			dataPtr++
 		}
-		if val == 0 {
-			_, _ = fmt.Fprint(&builder, strings.Repeat(" ", maxLen))
-		} else {
-			_, _ = fmt.Fprintf(&builder, format, val)
+		spaces := dataPtr + maxLen - Digits(val)
+		for ; dataPtr < spaces; dataPtr++ {
+			data[dataPtr] = ' '
+		}
+		if val != 0 {
+			dataPtr += copy(data[dataPtr:], strconv.Itoa(val))
 		}
 		if (i+1)%puzzle.n != 0 {
-			builder.WriteRune(' ')
+			data[dataPtr] = ' '
+			dataPtr++
 		}
 	}
-	return builder.String()
+	return string(data)
 }
 
 func (puzzle *Puzzle) Bytes() string {
-	var builder bytes.Buffer
-	builder.WriteString("MAU15P")
-	builder.WriteByte(0)
-	builder.WriteByte(0)
-	for _, val := range puzzle.data {
+	var data = make([]byte, 8+len(puzzle.data)*2)
+	copy(data[0:6], "MAU15P")
+	data[7] = 0
+	data[8] = 0
+	const prefixLen = 8
+	for i, val := range puzzle.data {
 		if val == 0 {
-			builder.WriteByte(255)
+			data[prefixLen+i*2] = 255
 		} else {
-			builder.WriteByte(byte(val))
+			data[prefixLen+i*2] = byte(val)
 		}
-		builder.WriteByte(0)
+		data[prefixLen+i*2+1] = 0
 	}
-	return builder.String()
+	return string(data)
 }
