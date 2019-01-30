@@ -131,6 +131,7 @@ func main() {
 			err = pprof.StartCPUProfile(file)
 			if err != nil {
 				stderr("Failed to start profiling:", err)
+				return
 			}
 		}
 		duration, solution = solveBenchmark(puzzle)
@@ -153,7 +154,7 @@ func main() {
 	} else {
 		buf.WriteString("Puzzle:\n")
 		buf.WriteString(puzzle.String())
-		buf.WriteString("\n\nSolution (click coordinates):\n")
+		_, _ = fmt.Fprintf(&buf, "\n\nSolution (%d moves):\n", len(solution))
 		for _, click := range solution {
 			buf.WriteString(click.String())
 			buf.WriteRune('\n')
