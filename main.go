@@ -49,23 +49,23 @@ func stderr(msg ...interface{}) {
 	_, _ = fmt.Fprintln(os.Stderr, msg...)
 }
 
-func main() {
+func readFlags() {
 	flag.SetHelpTitles("fifteen - 15-puzzle solver",
 		"fifteen [-i inputpath] [-o outputpath] [-s shufflecount] [-f text|json] [-a solution|steps]")
 	err := flag.Parse()
 	if err != nil {
 		stderr(err)
 		flag.PrintHelp()
-		return
+		os.Exit(1)
 	} else if *wantHelp {
 		flag.PrintHelp()
-		return
+		os.Exit(0)
 	}
 
 	if *randomize != "random" && *shuffle == 0 && len(*input) == 0 {
 		stderr("No shuffling or input given")
 		flag.PrintHelp()
-		return
+		os.Exit(2)
 	}
 
 	if *randomSeed == -1 {
@@ -73,8 +73,9 @@ func main() {
 	} else {
 		rand.Seed(*randomSeed)
 	}
+}
 
-	var puzzle *fifteen.Puzzle
+func readInput() (puzzle *fifteen.Puzzle) {
 	if *randomize == "random" {
 		puzzle, _ = fifteen.NewRandomPuzzle(*size)
 	} else if len(*input) == 0 {
@@ -83,7 +84,7 @@ func main() {
 		data, err := ioutil.ReadFile(*input)
 		if err != nil {
 			stderr("Failed to read input file:", err)
-			return
+			os.Exit(10)
 		}
 		puzzle, err = fifteen.ParsePuzzle(string(data))
 		if err != nil {
@@ -93,12 +94,12 @@ func main() {
 				stderr("Input was not JSON or plaintext puzzle.")
 				stderr("Plaintext parse error:", err)
 				stderr("JSON parse error:", jsonErr)
-				return
+				os.Exit(11)
 			}
 			err = puzzle.SetData(inputData)
 			if err != nil {
 				stderr("Invalid array dimensions in input JSON")
-				return
+				os.Exit(12)
 			}
 		}
 	}
@@ -106,7 +107,7 @@ func main() {
 	solvable := puzzle.Solvable()
 	if !solvable {
 		stderr("Input puzzle is not solvable!")
-		return
+		os.Exit(15)
 	}
 	if *randomize == "shuffle" {
 		puzzle.Shuffle(*shuffle)
@@ -114,11 +115,12 @@ func main() {
 
 	if puzzle.IsSolved() {
 		stderr("Puzzle is already solved")
-		return
+		os.Exit(16)
 	}
+	return
+}
 
-	var solution []fifteen.Position
-	var duration int64
+func solve(puzzle *fifteen.Puzzle) (solution []fifteen.Position, duration int64) {
 	if *animateFormat == "steps" {
 		solution = solveAnimated(puzzle)
 	} else {
@@ -126,12 +128,12 @@ func main() {
 			file, err := os.OpenFile(*profile, os.O_CREATE|os.O_WRONLY, 0644)
 			if err != nil {
 				stderr("Failed to open profile file:", err)
-				return
+				os.Exit(20)
 			}
 			err = pprof.StartCPUProfile(file)
 			if err != nil {
 				stderr("Failed to start profiling:", err)
-				return
+				os.Exit(21)
 			}
 		}
 		duration, solution = solveBenchmark(puzzle)
@@ -142,7 +144,10 @@ func main() {
 		duration := time.Duration(*animateTime) * time.Second
 		animateSolution(puzzle.Copy(), solution, duration/time.Duration(len(solution)))
 	}
+	return
+}
 
+func printOutput(puzzle *fifteen.Puzzle, solution []fifteen.Position, duration int64) {
 	var buf bytes.Buffer
 	if *outputFormat == "json" {
 		data := JSONOutput{
@@ -166,7 +171,7 @@ func main() {
 	if *output == "-" {
 		fmt.Print(buf.String())
 	} else {
-		err = ioutil.WriteFile(*output, buf.Bytes(), 0644)
+		err := ioutil.WriteFile(*output, buf.Bytes(), 0644)
 		if err != nil {
 			stderr("Failed to write output:", err)
 		}
@@ -185,10 +190,8 @@ func formatDuration(duration int64) string {
 			return fmt.Sprintf("%d.%d seconds", seconds, ms)
 		}
 		return fmt.Sprintf("%d ms", ms)
-	} else if duration > 1000 {
-		return fmt.Sprintf("%3.3f µs", float64(duration)/1000.0)
 	}
-	return fmt.Sprintf("%d ns", duration)
+	return fmt.Sprintf("%3.3f µs", float64(duration)/1000.0)
 }
 
 func solveBenchmark(puzzle *fifteen.Puzzle) (int64, []fifteen.Position) {
@@ -196,4 +199,11 @@ func solveBenchmark(puzzle *fifteen.Puzzle) (int64, []fifteen.Position) {
 	sol := puzzle.FindShortestSolution()
 	end := time.Now().UnixNano()
 	return end - start, sol
+}
+
+func main() {
+	readFlags()
+	puzzle := readInput()
+	solution, duration := solve(puzzle)
+	printOutput(puzzle, solution, duration)
 }
