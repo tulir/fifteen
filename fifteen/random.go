@@ -18,6 +18,7 @@ package fifteen
 
 import (
 	"math/rand"
+	"maunium.net/go/fifteen/fifteen/datastructures"
 )
 
 // NewRandomPuzzle creates a puzzle with completely random values.
@@ -44,18 +45,20 @@ func NewRandomPuzzle(n int) (*Puzzle, error) {
 // Shuffle makes the given amount of random moves on the puzzle.
 func (puzzle *Puzzle) Shuffle(moves int) {
 	pos := puzzle.blank
-	var validMoves []Position
-	var allMoves [4]Position
+	vmPtr := 0
+	var validMoves [4]ds.Position
+	var allMoves [4]ds.Position
 	for i := 0; i < moves; i++ {
+		vmPtr = 0
 		allMoves[0], allMoves[1], allMoves[2], allMoves[3] = pos.AllMoves()
 
-		validMoves = make([]Position, 0, 4)
 		for _, move := range allMoves {
 			if move.Valid(puzzle.n) {
-				validMoves = append(validMoves, move)
+				validMoves[vmPtr] = move
+				vmPtr++
 			}
 		}
-		pos = validMoves[rand.Intn(len(validMoves))]
+		pos = validMoves[rand.Intn(vmPtr)]
 		puzzle.MovePos(pos)
 	}
 }

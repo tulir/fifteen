@@ -21,40 +21,19 @@ import (
 	"testing"
 )
 
-func TestPuzzle_ManhattanDistance_Solved(t *testing.T) {
+func TestPuzzle_Hash_4(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
-	assert.Zero(t, puzzle.ManhattanDistance())
+	assert.Equal(t, uint64(0x7c84dc9477851775), puzzle.Hash())
 }
 
-func TestPuzzle_ManhattanDistance_ThreeMoves(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	puzzle.Move(4, 3)
-	puzzle.Move(3, 3)
-	puzzle.Move(3, 4)
-	// Three moves misplace four tiles when the empty spot is included
-	assert.Equal(t, 4, puzzle.ManhattanDistance())
+func TestPuzzle_Hash_11(t *testing.T) {
+	puzzle, _ := NewSolvedPuzzle(11)
+	assert.Equal(t, uint64(0xbae28509ef48216f), puzzle.Hash())
 }
 
-func BenchmarkPuzzle_ManhattanDistance_Solved(b *testing.B) {
+func BenchmarkPuzzle_Hash_4(b *testing.B) {
 	puzzle, _ := NewSolvedPuzzle(4)
 	for n := 0; n < b.N; n++ {
-		puzzle.ManhattanDistance()
-	}
-}
-
-func BenchmarkPuzzle_ManhattanDistance_ThreeMoves(b *testing.B) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	puzzle.Move(4, 3)
-	puzzle.Move(3, 3)
-	puzzle.Move(3, 4)
-	for n := 0; n < b.N; n++ {
-		puzzle.ManhattanDistance()
-	}
-}
-
-func BenchmarkPuzzle_ManhattanDistance_Random(b *testing.B) {
-	puzzle, _ := NewRandomPuzzle(4)
-	for n := 0; n < b.N; n++ {
-		puzzle.ManhattanDistance()
+		puzzle.Hash()
 	}
 }

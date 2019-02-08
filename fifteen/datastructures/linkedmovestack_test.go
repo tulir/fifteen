@@ -14,33 +14,27 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package fifteen
+package ds
 
 import (
 	"github.com/stretchr/testify/assert"
-	"math/rand"
-	"maunium.net/go/fifteen/fifteen/datastructures"
 	"testing"
 )
 
-func TestNewRandomPuzzle(t *testing.T) {
-	// Seed chosen so that the initial randomization won't provide a solvable puzzle.
-	rand.Seed(1236)
-	puzzle, _ := NewRandomPuzzle(4)
-	assert.Equal(t, [][]int{
-		{2, 12, 5, 15},
-		{9, 14, 1, 13},
-		{11, 3, 8, 0},
-		{6, 4, 7, 10},
-	}, puzzle.Data())
-	assert.Equal(t, ds.Position{4, 3}, puzzle.blank)
-}
-
-func TestPuzzle_Shuffle(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	assert.True(t, puzzle.Solvable())
-	assert.True(t, puzzle.IsSolved())
-	puzzle.Shuffle(200)
-	assert.True(t, puzzle.Solvable())
-	assert.False(t, puzzle.IsSolved())
+func TestLinkedMoveStack_All(t *testing.T) {
+	lms := LinkedMoveStack{}
+	lms.Push(Position{1, 2})
+	lms.Push(Position{2, 2})
+	lms.Push(Position{2, 3})
+	lms.Push(Position{3, 3})
+	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}, {3, 3}}, lms.Array())
+	lms.Pop()
+	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}}, lms.Array())
+	lms.Push(Position{2, 4})
+	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}, {2, 4}}, lms.Array())
+	lms.Pop()
+	lms.Pop()
+	lms.Pop()
+	lms.Pop()
+	assert.Empty(t, lms.Array())
 }

@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"maunium.net/go/fifteen/fifteen/datastructures"
 	"os"
 	"runtime/pprof"
 	"time"
@@ -120,7 +121,7 @@ func readInput() (puzzle *fifteen.Puzzle) {
 	return
 }
 
-func solve(puzzle *fifteen.Puzzle) (solution []fifteen.Position, duration int64) {
+func solve(puzzle *fifteen.Puzzle) (solution []ds.Position, duration int64) {
 	if *animateFormat == "steps" {
 		solution = solveAnimated(puzzle)
 	} else {
@@ -147,7 +148,7 @@ func solve(puzzle *fifteen.Puzzle) (solution []fifteen.Position, duration int64)
 	return
 }
 
-func printOutput(puzzle *fifteen.Puzzle, solution []fifteen.Position, duration int64) {
+func printOutput(puzzle *fifteen.Puzzle, solution []ds.Position, duration int64) {
 	var buf bytes.Buffer
 	if *outputFormat == "json" {
 		data := JSONOutput{
@@ -194,7 +195,7 @@ func formatDuration(duration int64) string {
 	return fmt.Sprintf("%3.3f µs", float64(duration)/1000.0)
 }
 
-func solveBenchmark(puzzle *fifteen.Puzzle) (int64, []fifteen.Position) {
+func solveBenchmark(puzzle *fifteen.Puzzle) (int64, []ds.Position) {
 	start := time.Now().UnixNano()
 	sol := puzzle.FindShortestSolution()
 	end := time.Now().UnixNano()

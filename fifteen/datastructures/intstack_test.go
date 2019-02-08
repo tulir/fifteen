@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package fifteen
+package ds
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -36,22 +36,4 @@ func TestIntStack_All(t *testing.T) {
 	is.Push(1236)
 	assert.Len(t, is, 3)
 	assert.Equal(t, []uint64{1234, 1234, 1236}, []uint64(is))
-}
-
-func TestLinkedMoveStack_All(t *testing.T) {
-	lms := LinkedMoveStack{}
-	lms.Push(Position{1, 2})
-	lms.Push(Position{2, 2})
-	lms.Push(Position{2, 3})
-	lms.Push(Position{3, 3})
-	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}, {3, 3}}, lms.Array())
-	lms.Pop()
-	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}}, lms.Array())
-	lms.Push(Position{2, 4})
-	assert.Equal(t, []Position{{1, 2}, {2, 2}, {2, 3}, {2, 4}}, lms.Array())
-	lms.Pop()
-	lms.Pop()
-	lms.Pop()
-	lms.Pop()
-	assert.Empty(t, lms.Array())
 }

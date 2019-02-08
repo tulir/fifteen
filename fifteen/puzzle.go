@@ -18,13 +18,14 @@ package fifteen
 
 import (
 	"errors"
+	"maunium.net/go/fifteen/fifteen/datastructures"
 )
 
 // Puzzle is the base container for 15-puzzles.
 type Puzzle struct {
 	data  []int
 	n     int
-	blank Position
+	blank ds.Position
 }
 
 // NewPuzzle creates a new blank puzzle.
@@ -76,7 +77,7 @@ func (puzzle *Puzzle) Set(x, y, val int) {
 		return
 	}
 	if val == 0 {
-		puzzle.blank = Position{x, y}
+		puzzle.blank = ds.Position{x, y}
 	}
 	puzzle.data[puzzle.Index(x, y)] = val
 }
@@ -94,7 +95,7 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 }
 
 // Move moves the piece at the given coordinates to the empty slot in the puzzle.
-func (puzzle *Puzzle) Move(x, y int) Position {
+func (puzzle *Puzzle) Move(x, y int) ds.Position {
 	if x < 1 || y < 1 || x > puzzle.n || y > puzzle.n {
 		return puzzle.blank
 	}
@@ -108,7 +109,7 @@ func (puzzle *Puzzle) Move(x, y int) Position {
 }
 
 // MovePos moves the piece at the given Position to the empty slot in the puzzle.
-func (puzzle *Puzzle) MovePos(pos Position) Position {
+func (puzzle *Puzzle) MovePos(pos ds.Position) ds.Position {
 	return puzzle.Move(pos.X, pos.Y)
 }
 
@@ -144,6 +145,6 @@ func (puzzle *Puzzle) Size() int {
 
 // GetValidMoves returns the possible clicks in the current position of the puzzle.
 // Only works for valid puzzles. Does not work after SetData().
-func (puzzle *Puzzle) GetValidMoves() []Position {
+func (puzzle *Puzzle) GetValidMoves() []ds.Position {
 	return puzzle.blank.ValidMoves(puzzle.n)
 }

@@ -19,20 +19,21 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"maunium.net/go/fifteen/fifteen"
+	"maunium.net/go/fifteen/fifteen/datastructures"
+	"maunium.net/go/fifteen/fifteen/util"
 	"strconv"
 )
 
 type JSONOutput struct {
-	Puzzle   [][]int            `json:"puzzle"`
-	Clicks   []fifteen.Position `json:"clicks"`
-	Duration int64              `json:"duration,omitempty"`
+	Puzzle   [][]int       `json:"puzzle"`
+	Clicks   []ds.Position `json:"clicks"`
+	Duration int64         `json:"duration,omitempty"`
 }
 
 func (op *JSONOutput) PrettyJSON(buf *bytes.Buffer) {
 	buf.WriteString("{\n")
 	buf.WriteString("  \"puzzle\": [\n")
-	charSize := fifteen.Digits(len(op.Puzzle) * len(op.Puzzle))
+	charSize := util.Digits(len(op.Puzzle) * len(op.Puzzle))
 	format := "%" + strconv.Itoa(charSize) + "d"
 	for y, row := range op.Puzzle {
 		buf.WriteString("    [")

@@ -16,17 +16,24 @@
 
 package fifteen
 
+import (
+	"maunium.net/go/fifteen/fifteen/datastructures"
+)
+
 type path struct {
 	root  *Puzzle
-	nodes IntStack
-	moves LinkedMoveStack
+	nodes ds.IntStack
+	moves ds.LinkedMoveStack
 }
 
+// DrawIntermediate is a function that the main program sets. It is then called
+// by search() whenever it makes a move.
+// Mostly useless as rendering each step in the algorithm doesn't even look fun.
 var DrawIntermediate func(puzzle *Puzzle)
 
 // FindShortestSolution uses the iterative deepening A* along with the manhattan distance as a heuristic
 // to find the least number of moves required to move the puzzle into the final position.
-func (puzzle *Puzzle) FindShortestSolution() []Position {
+func (puzzle *Puzzle) FindShortestSolution() []ds.Position {
 	path := &path{
 		root: puzzle.Copy(),
 	}
@@ -38,10 +45,11 @@ func (puzzle *Puzzle) FindShortestSolution() []Position {
 	return path.moves.Array()
 }
 
+// IDA* algorithm based on pseudocode from https://en.wikipedia.org/wiki/Iterative_deepening_A*
 func (p *path) idaStar() bool {
 	bound := p.root.ManhattanDistance()
-	p.nodes = IntStack{p.root.Hash()}
-	p.moves = LinkedMoveStack{}
+	p.nodes = ds.IntStack{p.root.Hash()}
+	p.moves = ds.LinkedMoveStack{}
 	for {
 		bound = p.search(p.root, 0, bound)
 		if bound == idasFound {
@@ -64,9 +72,12 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 	}
 	min := idasNotFound
 	for _, move := range puzzle.GetValidMoves() {
+		// In order to save memory (and GC time), we mutate the puzzle instead of making copies.
+		// MovePos returns the reverse move which we remember and apply after recursing search().
 		reverse := puzzle.MovePos(move)
 		hash := puzzle.Hash()
 		if p.nodes.Contains(hash) {
+			// Already visited this state, revert move and continue.
 			puzzle.MovePos(reverse)
 			continue
 		}
@@ -76,6 +87,7 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 		p.nodes.Push(hash)
 		p.moves.Push(move)
 		t := p.search(puzzle, cost+1, bound)
+		// Revert move made at beginning of loop.
 		puzzle.MovePos(reverse)
 		if t == idasFound {
 			return idasFound

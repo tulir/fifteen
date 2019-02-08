@@ -14,30 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package fifteen
-
-// IntStack is a string array with additional methods to use it like a stack.
-type IntStack []uint64
-
-// Push pushes the given string to the top of the stack.
-func (s *IntStack) Push(v uint64) {
-	*s = append(*s, v)
-}
-
-// Remove removes the element at the top of the stack.
-func (s *IntStack) Remove() {
-	*s = (*s)[:len(*s)-1]
-}
-
-// Contains checks if the stack contains the given value.
-func (s *IntStack) Contains(val uint64) bool {
-	for _, i := range *s {
-		if i == val {
-			return true
-		}
-	}
-	return false
-}
+package ds
 
 // linkedMove is an item in a LinkedMoveStack.
 type linkedMove struct {
@@ -47,6 +24,9 @@ type linkedMove struct {
 }
 
 // LinkedMoveStack is a linked list of Positions that acts like a stack.
+//
+// It's used for remembering moves in the IDA* algorithm and it's a linked list
+// because we push and pop items a lot, but only iterate over it once at the end.
 type LinkedMoveStack struct {
 	start *linkedMove
 	end   *linkedMove

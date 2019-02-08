@@ -17,57 +17,41 @@
 package fifteen
 
 import (
+	"maunium.net/go/fifteen/fifteen/util"
 	"strconv"
 )
 
-func Digits(i int) (count int) {
-	for i != 0 {
-		i /= 10
-		count++
-	}
-	return count
-}
-
 // String converts the puzzle into a string.
 func (puzzle *Puzzle) String() string {
-	maxLen := Digits(len(puzzle.data) - 1)
+	maxLen := util.Digits(len(puzzle.data) - 1)
 	outLen := len(puzzle.data)*(maxLen+1) - 1
 	var data = make([]byte, outLen)
 	var dataPtr int
 
 	for i, val := range puzzle.data {
 		if i != 0 && i%puzzle.n == 0 {
+			// Newline after every n cells
 			data[dataPtr] = '\n'
 			dataPtr++
 		}
-		spaces := dataPtr + maxLen - Digits(val)
+		spaces := dataPtr + maxLen - util.Digits(val)
+		// Left-pad with spaces
 		for ; dataPtr < spaces; dataPtr++ {
 			data[dataPtr] = ' '
 		}
 		if val != 0 {
+			// Write number to output
 			dataPtr += copy(data[dataPtr:], strconv.Itoa(val))
 		} else {
+			// Dash at the empty spot instead of space so we'd have some chance
+			// of whitespace-independent parsing.
 			data[dataPtr-1] = '-'
 		}
+		// Add space after number except if end of line (newline is added at beginning of loop)
 		if (i+1)%puzzle.n != 0 {
 			data[dataPtr] = ' '
 			dataPtr++
 		}
 	}
 	return string(data)
-}
-
-const fnvOffsetBasis = 14695981039346656037
-const fnvPrime = 1099511628211
-
-// Hash calculates the FNV-1 hash of puzzle data.
-//
-// See https://en.wikipedia.org/wiki/FNV_hash_function
-func (puzzle *Puzzle) Hash() (hash uint64) {
-	hash = fnvOffsetBasis
-	for _, val := range puzzle.data {
-		hash *= fnvPrime
-		hash ^= uint64(val)
-	}
-	return
 }

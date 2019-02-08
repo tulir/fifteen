@@ -59,13 +59,3 @@ func TestPuzzle_String_11(t *testing.T) {
 100 101 102 103 104 105 106 107 108 109 110
 111 112 113 114 115 116 117 118 119 120   -`, puzzle.String())
 }
-
-func TestPuzzle_Hash_4(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	assert.Equal(t, uint64(0x7c84dc9477851775), puzzle.Hash())
-}
-
-func TestPuzzle_Hash_11(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(11)
-	assert.Equal(t, uint64(0xbae28509ef48216f), puzzle.Hash())
-}

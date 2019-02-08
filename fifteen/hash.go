@@ -16,31 +16,17 @@
 
 package fifteen
 
-import (
-	"github.com/stretchr/testify/assert"
-	"math/rand"
-	"maunium.net/go/fifteen/fifteen/datastructures"
-	"testing"
-)
+const fnvOffsetBasis = 14695981039346656037
+const fnvPrime = 1099511628211
 
-func TestNewRandomPuzzle(t *testing.T) {
-	// Seed chosen so that the initial randomization won't provide a solvable puzzle.
-	rand.Seed(1236)
-	puzzle, _ := NewRandomPuzzle(4)
-	assert.Equal(t, [][]int{
-		{2, 12, 5, 15},
-		{9, 14, 1, 13},
-		{11, 3, 8, 0},
-		{6, 4, 7, 10},
-	}, puzzle.Data())
-	assert.Equal(t, ds.Position{4, 3}, puzzle.blank)
-}
-
-func TestPuzzle_Shuffle(t *testing.T) {
-	puzzle, _ := NewSolvedPuzzle(4)
-	assert.True(t, puzzle.Solvable())
-	assert.True(t, puzzle.IsSolved())
-	puzzle.Shuffle(200)
-	assert.True(t, puzzle.Solvable())
-	assert.False(t, puzzle.IsSolved())
+// Hash calculates the FNV-1 hash of puzzle data.
+//
+// See https://en.wikipedia.org/wiki/FNV_hash_function
+func (puzzle *Puzzle) Hash() (hash uint64) {
+	hash = fnvOffsetBasis
+	for _, val := range puzzle.data {
+		hash *= fnvPrime
+		hash ^= uint64(val)
+	}
+	return
 }

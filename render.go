@@ -19,6 +19,8 @@ package main
 import (
 	"github.com/gdamore/tcell"
 	"maunium.net/go/fifteen/fifteen"
+	"maunium.net/go/fifteen/fifteen/datastructures"
+	"maunium.net/go/fifteen/fifteen/util"
 	"strconv"
 	"time"
 )
@@ -38,7 +40,7 @@ const (
 )
 
 func renderGrid(screen tcell.Screen, size int) {
-	cellSize := fifteen.Digits(size*size) + 1
+	cellSize := util.Digits(size*size) + 1
 	right := size * cellSize
 	bottom := size * 2
 	width, height := screen.Size()
@@ -81,7 +83,7 @@ func renderGrid(screen tcell.Screen, size int) {
 }
 
 func renderPuzzle(screen tcell.Screen, puzzle *fifteen.Puzzle) {
-	cellSize := fifteen.Digits(puzzle.Size()*puzzle.Size()) + 1
+	cellSize := util.Digits(puzzle.Size()*puzzle.Size()) + 1
 	right := puzzle.Size() * cellSize
 	bottom := puzzle.Size() * 2
 	width, height := screen.Size()
@@ -104,7 +106,7 @@ func renderPuzzle(screen tcell.Screen, puzzle *fifteen.Puzzle) {
 	screen.Show()
 }
 
-func solveAnimated(puzzle *fifteen.Puzzle) []fifteen.Position {
+func solveAnimated(puzzle *fifteen.Puzzle) []ds.Position {
 	screen, err := tcell.NewScreen()
 	if err != nil {
 		panic(err)
@@ -126,7 +128,7 @@ func solveAnimated(puzzle *fifteen.Puzzle) []fifteen.Position {
 	return sol
 }
 
-func animateSolution(puzzle *fifteen.Puzzle, moves []fifteen.Position, delay time.Duration) {
+func animateSolution(puzzle *fifteen.Puzzle, moves []ds.Position, delay time.Duration) {
 	screen, _ := tcell.NewScreen()
 	_ = screen.Init()
 	renderGrid(screen, puzzle.Size())

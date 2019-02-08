@@ -16,6 +16,10 @@
 
 package fifteen
 
+import (
+	"maunium.net/go/fifteen/fifteen/util"
+)
+
 // ManhattanDistance returns the sum of the manhattan distances between the cells and their final positions.
 // This is used as the heuristic for the (ID)A* algorithm in the solver.
 //
@@ -29,7 +33,11 @@ func (puzzle *Puzzle) ManhattanDistance() (sum int) {
 			val = puzzle.n * puzzle.n
 		}
 		tX, tY = puzzle.Coordinates(val - 1)
-		sum += abs(pX - tX) + abs(pY - tY)
+		// https://en.wikipedia.org/wiki/Taxicab_geometry
+		// Manhattan distance between (pX, pY) and (tX, tY) is |pX - tX| + |pY - tY|
+		sum += util.Abs(pX-tX) + util.Abs(pY-tY)
+		// We're iterating over the puzzle data in order (left to right, top to bottom).
+		// Increment pX and pY appropriately.
 		pX++
 		if pX > puzzle.n {
 			pX = 1
@@ -37,11 +45,4 @@ func (puzzle *Puzzle) ManhattanDistance() (sum int) {
 		}
 	}
 	return
-}
-
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
 }

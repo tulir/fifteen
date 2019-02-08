@@ -55,6 +55,20 @@ func TestPuzzle_Solvable_BlankFail_9p(t *testing.T) {
 	assert.False(t, puzzle.Solvable())
 }
 
+func BenchmarkPuzzle_Solvable_Solved(b *testing.B) {
+	puzzle, _ := NewSolvedPuzzle(4)
+	for n := 0; n < b.N; n++ {
+		puzzle.Solvable()
+	}
+}
+
+func BenchmarkPuzzle_Solvable_Random(b *testing.B) {
+	puzzle, _ := NewRandomPuzzle(4)
+	for n := 0; n < b.N; n++ {
+		puzzle.Solvable()
+	}
+}
+
 func TestPuzzle_IsSolved_Solved(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
 	assert.True(t, puzzle.IsSolved())
@@ -74,4 +88,18 @@ func TestPuzzle_IsSolved_NoZero(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
 	puzzle.Set(4, 4, 16)
 	assert.False(t, puzzle.IsSolved())
+}
+
+func BenchmarkPuzzle_IsSolved_Solved(b *testing.B) {
+	puzzle, _ := NewSolvedPuzzle(4)
+	for n := 0; n < b.N; n++ {
+		puzzle.IsSolved()
+	}
+}
+
+func BenchmarkPuzzle_IsSolved_Random(b *testing.B) {
+	puzzle, _ := NewRandomPuzzle(4)
+	for n := 0; n < b.N; n++ {
+		puzzle.IsSolved()
+	}
 }
