@@ -33,7 +33,7 @@ func TestNewRandomPuzzle(t *testing.T) {
 		{11, 3, 8, 0},
 		{6, 4, 7, 10},
 	}, puzzle.Data())
-	assert.Equal(t, ds.Position{4, 3}, puzzle.blank)
+	assert.Equal(t, ds.Position{X: 4, Y: 3}, puzzle.blank)
 }
 
 func TestPuzzle_Shuffle(t *testing.T) {

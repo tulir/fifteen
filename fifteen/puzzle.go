@@ -77,7 +77,7 @@ func (puzzle *Puzzle) Set(x, y, val int) {
 		return
 	}
 	if val == 0 {
-		puzzle.blank = ds.Position{x, y}
+		puzzle.blank = ds.Position{X: x, Y: y}
 	}
 	puzzle.data[puzzle.Index(x, y)] = val
 }
