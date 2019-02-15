@@ -83,6 +83,10 @@ func renderGrid(screen tcell.Screen, size int) {
 }
 
 func renderPuzzle(screen tcell.Screen, puzzle *fifteen.Puzzle) {
+	renderPuzzleWithNextClick(screen, puzzle, nil)
+}
+
+func renderPuzzleWithNextClick(screen tcell.Screen, puzzle *fifteen.Puzzle, nextClick *ds.Position) {
 	cellSize := util.Digits(puzzle.Size()*puzzle.Size()) + 1
 	right := puzzle.Size() * cellSize
 	bottom := puzzle.Size() * 2
@@ -95,11 +99,15 @@ func renderPuzzle(screen tcell.Screen, puzzle *fifteen.Puzzle) {
 			if cell == 0 {
 				str = ""
 			}
+			style := tcell.StyleDefault
+			if nextClick != nil && x+1 == nextClick.X && y+1 == nextClick.Y {
+				style = style.Background(tcell.ColorLime).Foreground(tcell.ColorBlack)
+			}
 			for i, char := range str {
-				screen.SetContent(offsetX+x*cellSize+i, offsetY+(y*2), char, nil, tcell.StyleDefault)
+				screen.SetContent(offsetX+x*cellSize+i, offsetY+(y*2), char, nil, style)
 			}
 			for i := len(str); i < cellSize-1; i++ {
-				screen.SetContent(offsetX+x*cellSize+i, offsetY+(y*2), ' ', nil, tcell.StyleDefault)
+				screen.SetContent(offsetX+x*cellSize+i, offsetY+(y*2), ' ', nil, style)
 			}
 		}
 	}
@@ -132,12 +140,16 @@ func animateSolution(puzzle *fifteen.Puzzle, moves []ds.Position, delay time.Dur
 	screen, _ := tcell.NewScreen()
 	_ = screen.Init()
 	renderGrid(screen, puzzle.Size())
-	renderPuzzle(screen, puzzle)
+	renderPuzzleWithNextClick(screen, puzzle, &moves[0])
 	time.Sleep(1 * time.Second)
-	for _, move := range moves {
+	for i, move := range moves {
 		time.Sleep(delay)
 		puzzle.MovePos(move)
-		renderPuzzle(screen, puzzle)
+		nextClick := &ds.Position{X: puzzle.Size(), Y: puzzle.Size()}
+		if i < len(moves)-1 {
+			nextClick = &moves[i+1]
+		}
+		renderPuzzleWithNextClick(screen, puzzle, nextClick)
 	}
 	time.Sleep(2 * time.Second)
 	screen.Fini()

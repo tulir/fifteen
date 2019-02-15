@@ -14,3 +14,23 @@ Program is split into 4 packages:
 
 Tests for each file are in another file in the same directory with the
 `_test.go` suffix as is customary in Go.
+
+## Data structures
+The project didn't require many data structures. The main struct is `Puzzle`,
+which contains the puzzle size, data and the position of the blank spot. The
+puzzle data is stored in a 1-dimensional array with a length of `size^2`. The
+array acts as a flattened 2-dimensional array and the cell at x, y is at
+index `y*size+x` in the array.
+
+Two stack types are used during the algorithm: `IntStack` is an array-based
+data structure with Push(), Remove() and Contains(), while `LinkedMoveStack`
+is a linked list with Push(), Pop() and a method to convert it into an array.
+Both of these are only used inside the algorithm for keeping track of past
+moves in the current move chain.
+
+Finally, `Position` is a simple struct containing `X` and `Y` ints. It is used
+to represent the positions that are clicked to make a move.
+
+## Algorithm
+The solver uses the [iterative deepening A*](https://en.wikipedia.org/wiki/Iterative_deepening_A*)
+algorithm with a [manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry) heuristic.
