@@ -18,6 +18,7 @@ package fifteen
 
 import (
 	"github.com/stretchr/testify/assert"
+	"maunium.net/go/fifteen/fifteen/datastructures"
 	"testing"
 )
 
@@ -62,6 +63,14 @@ func TestNewSolvedPuzzle(t *testing.T) {
 		} else {
 			assert.Equal(t, i+1, val)
 		}
+	}
+}
+
+// Made by @alafuzof
+func TestNewSolvedPuzzle_BlankPosition(t *testing.T) {
+	for i := 3; i < 16; i++ {
+		puzzle, _ := NewSolvedPuzzle(i)
+		assert.Equal(t, 0, puzzle.Get(puzzle.blank.X, puzzle.blank.Y))
 	}
 }
 
@@ -136,10 +145,28 @@ func TestPuzzle_Move(t *testing.T) {
 	assert.Equal(t, 15, puzzle.Get(4, 3))
 }
 
+func BenchmarkPuzzle_MovePos(b *testing.B) {
+	puzzle, _ := NewSolvedPuzzle(4)
+	puzzle.Move(3, 4)
+	puzzle.Move(3, 3)
+	rev := puzzle.Move(2, 3)
+	for i := 0; i < b.N; i++ {
+		rev = puzzle.MovePos(rev)
+	}
+}
+
 func TestPuzzle_Move_Reverse(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
-	rev0 := puzzle.Move(-1, -1)
-	assert.Equal(t, puzzle.blank, rev0)
+
+	recovers := 0
+	defer func() {
+		assert.NotNil(t, recover())
+		recovers++
+	}()
+	assert.Equal(t, 0, recovers)
+	puzzle.Move(-1, -1)
+	assert.Equal(t, 1, recovers)
+
 	rev1 := puzzle.Move(3, 4)
 	assert.False(t, puzzle.IsSolved())
 	rev2 := puzzle.Move(3, 3)
@@ -223,4 +250,28 @@ func TestPuzzle_Data(t *testing.T) {
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0},
 	}, puzzle.Data())
+}
+
+func TestPuzzle_GetValidMoves(t *testing.T) {
+	puzzle, _ := NewSolvedPuzzle(4)
+	moves := puzzle.GetValidMoves()
+	assert.Contains(t, moves, ds.Position{X: 3, Y: 4})
+	assert.Contains(t, moves, ds.Position{X: 4, Y: 3})
+	assert.NotContains(t, moves, ds.Position{X: 5, Y: 4})
+	assert.NotContains(t, moves, ds.Position{X: 4, Y: 5})
+	assert.Len(t, moves, 2)
+	puzzle.Move(4, 3)
+	moves = puzzle.GetValidMoves()
+	assert.Contains(t, moves, ds.Position{X: 3, Y: 3})
+	assert.NotContains(t, moves, ds.Position{X: 5, Y: 3})
+	assert.Contains(t, moves, ds.Position{X: 4, Y: 2})
+	assert.Contains(t, moves, ds.Position{X: 4, Y: 4})
+	assert.Len(t, moves, 3)
+	puzzle.Move(3, 3)
+	moves = puzzle.GetValidMoves()
+	assert.Contains(t, moves, ds.Position{X: 2, Y: 3})
+	assert.Contains(t, moves, ds.Position{X: 4, Y: 3})
+	assert.Contains(t, moves, ds.Position{X: 3, Y: 2})
+	assert.Contains(t, moves, ds.Position{X: 3, Y: 4})
+	assert.Len(t, moves, 4)
 }

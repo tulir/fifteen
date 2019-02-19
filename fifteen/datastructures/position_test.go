@@ -40,19 +40,6 @@ func TestPosition_AllMovesArray(t *testing.T) {
 	assert.Contains(t, moves, Position{1, 2})
 }
 
-func TestPosition_ValidMoves(t *testing.T) {
-	moves := Position{1, 1}.ValidMoves(6)
-	assert.NotContains(t, moves, Position{0, 1})
-	assert.Contains(t, moves, Position{2, 1})
-	assert.NotContains(t, moves, Position{1, 0})
-	assert.Contains(t, moves, Position{1, 2})
-	moves = Position{4, 3}.ValidMoves(4)
-	assert.Contains(t, moves, Position{3, 3})
-	assert.NotContains(t, moves, Position{5, 3})
-	assert.Contains(t, moves, Position{4, 2})
-	assert.Contains(t, moves, Position{4, 4})
-}
-
 func TestPosition_String(t *testing.T) {
 	assert.Equal(t, "122, 124", Position{122, 124}.String())
 }

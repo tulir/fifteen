@@ -46,25 +46,6 @@ func (pos Position) AllMovesArray() [4]Position {
 	return [4]Position{a, b, c, d}
 }
 
-// ValidMoves returns the valid moves from this position on a puzzle of the given size.
-func (pos Position) ValidMoves(n int) (validMoves []Position) {
-	moveCount := 4
-	if pos.X == 1 || pos.X == n {
-		moveCount--
-	}
-	if pos.Y == 1 || pos.Y == n {
-		moveCount--
-	}
-	validMoves = make([]Position, moveCount)
-	for _, move := range pos.AllMovesArray() {
-		if move.Valid(n) {
-			moveCount--
-			validMoves[moveCount] = move
-		}
-	}
-	return
-}
-
 // String returns the coordinates of this position in a string.
 func (pos Position) String() string {
 	return fmt.Sprintf("%d, %d", pos.X, pos.Y)

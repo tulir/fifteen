@@ -29,6 +29,7 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 	if err != nil {
 		return nil, err
 	}
+	found := make([]bool, puzzle.n * puzzle.n)
 	for y, row := range rows {
 		cells := strings.Fields(row)
 		if len(cells) != len(rows) {
@@ -38,6 +39,8 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 			var val int
 			if cell == "-" {
 				val = 0
+				puzzle.blank.Y = y + 1
+				puzzle.blank.X = x + 1
 			} else {
 				val, err = strconv.Atoi(cell)
 			}
@@ -48,6 +51,10 @@ func ParsePuzzle(input string) (*Puzzle, error) {
 			} else if val < 0 {
 				return nil, fmt.Errorf("value too small at row %d column %d", y, x)
 			}
+			if found[val] {
+				return nil, fmt.Errorf("value %d encountered for the second time at row %d column %d", val, y, x)
+			}
+			found[val] = true
 			puzzle.Set(x+1, y+1, val)
 		}
 	}

@@ -83,3 +83,24 @@ func TestParsePuzzle_ValueTooSmall(t *testing.T) {
 	assert.Contains(t, err.Error(), "value too small")
 	assert.Nil(t, puzzle)
 }
+
+// Made by @alafuzof
+func TestParsePuzzle_RepeatedValue(t *testing.T) {
+	puzzle, err := ParsePuzzle(
+		"1 1 1\n" +
+		"1 1 1\n" +
+		"1 1 1")
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "value 1 encountered for the second time")
+	assert.Nil(t, puzzle)
+}
+
+// Made by @alafuzof
+func TestParsePuzzle_MultipleBlanks(t *testing.T) {
+	puzzle, err := ParsePuzzle("- 2 3\n" +
+		"4 5 6\n" +
+		"7 8 -")
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "value 0 encountered for the second time")
+	assert.Nil(t, puzzle)
+}

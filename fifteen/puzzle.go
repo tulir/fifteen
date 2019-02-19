@@ -50,8 +50,8 @@ func NewSolvedPuzzle(n int) (*Puzzle, error) {
 	for i := 1; i < len(puzzle.data); i++ {
 		puzzle.data[i-1] = i
 	}
-	puzzle.blank.X = 4
-	puzzle.blank.Y = 4
+	puzzle.blank.X = n
+	puzzle.blank.Y = n
 	return puzzle, nil
 }
 
@@ -96,8 +96,11 @@ func (puzzle *Puzzle) Coordinates(index int) (x, y int) {
 
 // Move moves the piece at the given coordinates to the empty slot in the puzzle.
 func (puzzle *Puzzle) Move(x, y int) ds.Position {
-	if x < 1 || y < 1 || x > puzzle.n || y > puzzle.n {
-		return puzzle.blank
+	// Check if move is valid from current blank position
+	if (x < 1 || y < 1 || x > puzzle.n || y > puzzle.n) ||
+		!((x == puzzle.blank.X && (y == puzzle.blank.Y-1 || y == puzzle.blank.Y+1)) ||
+			(y == puzzle.blank.Y && (x == puzzle.blank.X-1 || x == puzzle.blank.X+1))) {
+		panic(errors.New("invalid move"))
 	}
 	from := puzzle.Index(x, y)
 	to := puzzle.Index(puzzle.blank.X, puzzle.blank.Y)
@@ -145,6 +148,20 @@ func (puzzle *Puzzle) Size() int {
 
 // GetValidMoves returns the possible clicks in the current position of the puzzle.
 // Only works for valid puzzles. Does not work after SetData().
-func (puzzle *Puzzle) GetValidMoves() []ds.Position {
-	return puzzle.blank.ValidMoves(puzzle.n)
+func (puzzle *Puzzle) GetValidMoves() (validMoves []ds.Position) {
+	moveCount := 4
+	if puzzle.blank.X == 1 || puzzle.blank.X == puzzle.n {
+		moveCount--
+	}
+	if puzzle.blank.Y == 1 || puzzle.blank.Y == puzzle.n {
+		moveCount--
+	}
+	validMoves = make([]ds.Position, moveCount)
+	for _, move := range puzzle.blank.AllMovesArray() {
+		if move.Valid(puzzle.n) {
+			moveCount--
+			validMoves[moveCount] = move
+		}
+	}
+	return
 }

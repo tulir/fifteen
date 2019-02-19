@@ -23,6 +23,7 @@ package fifteen
 func (puzzle *Puzzle) Solvable() bool {
 	var inversions, blankSpotRow int
 	found := make([]bool, puzzle.n*puzzle.n)
+	// Count inversions in puzzle while making sure it's valid.
 	for i, val := range puzzle.data {
 		if val < 0 || val >= puzzle.n*puzzle.n || found[val] {
 			// Duplicate or out of range value, puzzle is not valid and therefore not solvable.
@@ -40,9 +41,13 @@ func (puzzle *Puzzle) Solvable() bool {
 			}
 		}
 	}
+	// Check if puzzle is solvable based on number of inversions and row number of blank spot.
 	if puzzle.n%2 == 0 {
+		// For puzzles with even sizes, the puzzle is solvable if the number of
+		// inversions and the row number of the blank spot are both even or both odd.
 		return inversions%2 == blankSpotRow%2
 	}
+	// For puzzles with odd sizes, the puzzle is solvable if the number of inversions is even.
 	return inversions%2 == 0
 }
 

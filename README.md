@@ -8,7 +8,7 @@ Data structures and algorithms project, 15-puzzle solver. Written in Go.
 
 * [Project definition](docs/PROJECT_DEFINITION.md)
 * Week reports: [1](docs/WEEK_1.md), [2](docs/WEEK_2.md), [3](docs/WEEK_3.md),
-                [4](docs/WEEK_4.md), [5](docs/WEEK_5.md), 6
+                [4](docs/WEEK_4.md), [5](docs/WEEK_5.md), [6](docs/WEEK_6.md)
 * [Implementation document](docs/IMPLEMENTATION.md)
 * [Testing document](docs/TESTING.md)
 * [Usage](docs/USAGE.md)
