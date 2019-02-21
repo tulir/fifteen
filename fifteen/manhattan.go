@@ -17,6 +17,7 @@
 package fifteen
 
 import (
+	"maunium.net/go/fifteen/fifteen/datastructures"
 	"maunium.net/go/fifteen/fifteen/util"
 )
 
@@ -45,4 +46,14 @@ func (puzzle *Puzzle) ManhattanDistance() (sum int) {
 		}
 	}
 	return
+}
+
+func (puzzle *Puzzle) ManhattanDiff(value int, from, to ds.Position) (sum int) {
+	if value == 0 {
+		value = puzzle.n * puzzle.n
+	}
+	tX, tY := puzzle.Coordinates(value-1)
+	origDist := util.Abs(from.X - tX) + util.Abs(from.Y - tY)
+	newDist := util.Abs(to.X - tX) + util.Abs(to.Y - tY)
+	return newDist - origDist
 }

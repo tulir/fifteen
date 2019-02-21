@@ -51,7 +51,7 @@ func (p *path) idaStar() bool {
 	p.nodes = ds.IntStack{p.root.Hash()}
 	p.moves = ds.LinkedMoveStack{}
 	for {
-		status := p.search(p.root, 0, bound)
+		status := p.search(p.root, 0, p.root.ManhattanDistance(), bound)
 		if status == found {
 			return true
 		} else if status == notFound {
@@ -75,7 +75,7 @@ const (
 	notFound
 )
 
-func (p *path) search(puzzle *Puzzle, cost, bound int) searchResult {
+func (p *path) search(puzzle *Puzzle, cost, estimatedCost, bound int) searchResult {
 	if cost + puzzle.ManhattanDistance() > bound {
 		return increaseBound
 	} else if puzzle.IsSolved() {
@@ -97,7 +97,8 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) searchResult {
 		}
 		p.nodes.Push(hash)
 		p.moves.Push(move)
-		res := p.search(puzzle, cost+1, bound)
+		manhattanDiff := puzzle.ManhattanDiff(puzzle.Get(reverse.X, reverse.Y), reverse, move)
+		res := p.search(puzzle, cost+1, estimatedCost+manhattanDiff, bound)
 		// Revert move made at beginning of loop.
 		puzzle.MovePos(reverse)
 		if res == found {
