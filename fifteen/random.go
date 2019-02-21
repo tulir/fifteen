@@ -30,6 +30,10 @@ func NewRandomPuzzle(n int) (*Puzzle, error) {
 	puzzle.data = rand.Perm(len(puzzle.data))
 	ptr := len(puzzle.data) - 1
 	for !puzzle.Solvable() {
+		// Make sure we're not just making normal moves, that won't help with solvability.
+		if puzzle.data[ptr] == 0 {
+			ptr--
+		}
 		puzzle.data[ptr], puzzle.data[ptr-1] = puzzle.data[ptr-1], puzzle.data[ptr]
 		ptr--
 	}

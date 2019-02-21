@@ -12,5 +12,4 @@ func TestAbs(t *testing.T) {
 	for i := -1; i >= -100; i-- {
 		assert.Equal(t, -i, Abs(i))
 	}
-
 }

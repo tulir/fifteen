@@ -69,6 +69,11 @@ func readFlags() {
 		os.Exit(2)
 	}
 
+	if *size < 3 || *size > 15 {
+		stderr("Puzzle size must be within 3 and 15.")
+		os.Exit(3)
+	}
+
 	if *randomSeed == -1 {
 		rand.Seed(time.Now().UnixNano())
 	} else {

@@ -22,10 +22,11 @@ package fifteen
 // Space complexity: O(1)
 func (puzzle *Puzzle) Solvable() bool {
 	var inversions, blankSpotRow int
-	found := make([]bool, puzzle.n*puzzle.n)
+	nSquared := puzzle.n * puzzle.n
+	found := make([]bool, nSquared)
 	// Count inversions in puzzle while making sure it's valid.
 	for i, val := range puzzle.data {
-		if val < 0 || val >= puzzle.n*puzzle.n || found[val] {
+		if val < 0 || val >= nSquared || found[val] {
 			// Duplicate or out of range value, puzzle is not valid and therefore not solvable.
 			return false
 		}

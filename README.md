@@ -12,6 +12,9 @@ Data structures and algorithms project, 15-puzzle solver. Written in Go.
 * [Implementation document](docs/IMPLEMENTATION.md)
 * [Testing document](docs/TESTING.md)
 * [Usage](docs/USAGE.md)
+* Godoc: [main logic](https://godoc.org/maunium.net/go/fifteen/fifteen),
+         [data structures](https://godoc.org/maunium.net/go/fifteen/fifteen/datastructures),
+         [util](https://godoc.org/maunium.net/go/fifteen/fifteen/util)
 
 ## Installation
 0. Install [Go](https://golang.org/) 1.11 or higher

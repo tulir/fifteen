@@ -36,6 +36,19 @@ func TestNewRandomPuzzle(t *testing.T) {
 	assert.Equal(t, ds.Position{X: 4, Y: 3}, puzzle.blank)
 }
 
+func TestNewRandomPuzzle2(t *testing.T) {
+	// Seed chosen so that the initial randomization won't provide a solvable puzzle
+	// and the blank position will be at the end.
+	rand.Seed(13794)
+	puzzle, _ := NewRandomPuzzle(3)
+	assert.Equal(t, [][]int{
+		{5, 2, 1},
+		{3, 6, 4},
+		{7, 8, 0},
+	}, puzzle.Data())
+	assert.Equal(t, ds.Position{X: 3, Y: 3}, puzzle.blank)
+}
+
 func TestPuzzle_Shuffle(t *testing.T) {
 	puzzle, _ := NewSolvedPuzzle(4)
 	assert.True(t, puzzle.Solvable())

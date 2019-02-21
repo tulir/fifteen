@@ -51,26 +51,37 @@ func (p *path) idaStar() bool {
 	p.nodes = ds.IntStack{p.root.Hash()}
 	p.moves = ds.LinkedMoveStack{}
 	for {
-		bound = p.search(p.root, 0, bound)
-		if bound == idasFound {
+		status := p.search(p.root, 0, bound)
+		if status == found {
 			return true
-		} else if bound == idasNotFound {
+		} else if status == notFound {
 			return false
+		}
+		if p.root.n == 4 {
+			// Increasing bound by 2 should be admissible as a heuristic for size 4 puzzles and speeds up solving a lot.
+			// https://web.archive.org/web/20141224035932/http://juropollo.xe0.ru/stp_wd_translation_en.htm
+			bound += 2
+		} else {
+			bound += 1
 		}
 	}
 }
 
-const idasFound = -1
-const idasNotFound = 2 << 30
+type searchResult int
 
-func (p *path) search(puzzle *Puzzle, cost, bound int) int {
-	estimatedCost := cost + puzzle.ManhattanDistance()
-	if estimatedCost > bound {
-		return estimatedCost
+const (
+	increaseBound searchResult = iota
+	found
+	notFound
+)
+
+func (p *path) search(puzzle *Puzzle, cost, bound int) searchResult {
+	if cost + puzzle.ManhattanDistance() > bound {
+		return increaseBound
 	} else if puzzle.IsSolved() {
-		return idasFound
+		return found
 	}
-	min := idasNotFound
+	status := notFound
 	for _, move := range puzzle.GetValidMoves() {
 		// In order to save memory (and GC time), we mutate the puzzle instead of making copies.
 		// MovePos returns the reverse move which we remember and apply after recursing search().
@@ -86,13 +97,13 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 		}
 		p.nodes.Push(hash)
 		p.moves.Push(move)
-		t := p.search(puzzle, cost+1, bound)
+		res := p.search(puzzle, cost+1, bound)
 		// Revert move made at beginning of loop.
 		puzzle.MovePos(reverse)
-		if t == idasFound {
-			return idasFound
-		} else if t < min {
-			min = t
+		if res == found {
+			return found
+		} else if status == notFound {
+			status = res
 		}
 		p.moves.Pop()
 		p.nodes.Remove()
@@ -100,5 +111,5 @@ func (p *path) search(puzzle *Puzzle, cost, bound int) int {
 			DrawIntermediate(puzzle)
 		}
 	}
-	return min
+	return status
 }
