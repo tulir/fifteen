@@ -7,7 +7,7 @@ Implemented improvement ideas from peer review
 * Moved getting valid moves to `Puzzle`
 * Added move validation to `Move()`
 
-Second peer review, of @alafuzof's tira-puristin [here](https://github.com/alafuzof/tira-puristin)
+Second peer review, of @alafuzof's tira-puristin [here](https://github.com/alafuzof/tira-puristin/issues/2)
 
 I looked into Kenichiro Takahashi's heuristics more, but it turns out they're
 specific to 4x4 puzzles and are not documented properly. Increasing the IDA*
@@ -21,3 +21,5 @@ added for it.
 
 Next steps:
 * Add performance tests for data structures
+
+Time spent: 8h
