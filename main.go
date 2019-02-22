@@ -102,6 +102,7 @@ func readInput() (puzzle *fifteen.Puzzle) {
 				stderr("JSON parse error:", jsonErr)
 				os.Exit(11)
 			}
+			puzzle, _ = fifteen.NewPuzzle(len(inputData))
 			err = puzzle.SetData(inputData)
 			if err != nil {
 				stderr("Invalid array dimensions in input JSON")
