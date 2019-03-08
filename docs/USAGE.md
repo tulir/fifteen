@@ -1,6 +1,10 @@
 # Usage
-Run with `./fifteen <flags>` after building as specified in previous section.
-See `./fifteen --help` for a list of flags.
+Run with `./fifteen-bin <flags>` after building as specified README.
+See `./fifteen-bin --help` for a list of flags or see below for in-depth
+explanations of each flag.
+
+If using windows, it is recommended to use a unix-like terminal, such as
+Cygwin, Windows Subsystem for Linux or Git Bash.
 
 ## Puzzle size
 Puzzle size can be set with `-w <size>`. Size must be between 3 and 15 (inclusive).
@@ -11,7 +15,8 @@ is specified without specifying the randomization mode with `-r`, `shuffle` is
 assumed. If `-r random` is specified, `-n <moves>` is no-op.
 
 Note that `-r random` puzzles are generally much harder to solve than puzzles
-shuffled with a low number (<200) of moves.
+shuffled with a low number (<200) of moves. Shuffles with less than 100 moves
+are generally solved nearly instantly
 
 Randomization means generating a completely random array and swapping values
 until the puzzle is solvable. Shuffling starts with a solved puzzle and makes

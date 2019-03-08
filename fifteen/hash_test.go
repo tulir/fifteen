@@ -33,6 +33,7 @@ func TestPuzzle_Hash_11(t *testing.T) {
 
 func BenchmarkPuzzle_Hash_4(b *testing.B) {
 	puzzle, _ := NewSolvedPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.Hash()
 	}

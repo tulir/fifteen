@@ -150,6 +150,7 @@ func BenchmarkPuzzle_MovePos(b *testing.B) {
 	puzzle.Move(3, 4)
 	puzzle.Move(3, 3)
 	rev := puzzle.Move(2, 3)
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		rev = puzzle.MovePos(rev)
 	}

@@ -37,6 +37,7 @@ func TestPuzzle_ManhattanDistance_ThreeMoves(t *testing.T) {
 
 func BenchmarkPuzzle_ManhattanDistance_Solved(b *testing.B) {
 	puzzle, _ := NewSolvedPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.ManhattanDistance()
 	}
@@ -47,6 +48,7 @@ func BenchmarkPuzzle_ManhattanDistance_ThreeMoves(b *testing.B) {
 	puzzle.Move(4, 3)
 	puzzle.Move(3, 3)
 	puzzle.Move(3, 4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.ManhattanDistance()
 	}
@@ -54,6 +56,7 @@ func BenchmarkPuzzle_ManhattanDistance_ThreeMoves(b *testing.B) {
 
 func BenchmarkPuzzle_ManhattanDistance_Random(b *testing.B) {
 	puzzle, _ := NewRandomPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.ManhattanDistance()
 	}

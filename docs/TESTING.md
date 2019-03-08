@@ -37,7 +37,7 @@ such as the manhattan distance calculation function, the puzzle move function
 and the puzzle solved check function.
 
 ### Running benchmarks
-Simple benchmark:
+Basic run of all benchmarks:
 ```bash
 go test ./... -bench=.
 ```
@@ -46,4 +46,3 @@ The benchmark will run for a minimum of 1 second by default. All the benchmarked
 functions are fast enough that the benchmarks are accurate with that default.
 If you still want to change the time, you can use `-benchtime=Xs` to change the
 time to run the benchmarks for (replace X with number of seconds).
-

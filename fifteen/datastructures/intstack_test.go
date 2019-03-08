@@ -18,6 +18,7 @@ package ds
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -36,4 +37,22 @@ func TestIntStack_All(t *testing.T) {
 	is.Push(1236)
 	assert.Len(t, is, 3)
 	assert.Equal(t, []uint64{1234, 1234, 1236}, []uint64(is))
+}
+
+func BenchmarkIntStack_Push(b *testing.B) {
+	is := IntStack{}
+	for n := 0; n < b.N; n++ {
+		is.Push(12345)
+	}
+}
+
+func BenchmarkIntStack_Contains(b *testing.B) {
+	is := IntStack{}
+	for i := 0; i < 80; i++ {
+		is.Push(rand.Uint64())
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		is.Contains(rand.Uint64())
+	}
 }

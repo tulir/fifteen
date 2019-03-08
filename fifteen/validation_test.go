@@ -57,6 +57,7 @@ func TestPuzzle_Solvable_BlankFail_9p(t *testing.T) {
 
 func BenchmarkPuzzle_Solvable_Solved(b *testing.B) {
 	puzzle, _ := NewSolvedPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.Solvable()
 	}
@@ -64,6 +65,7 @@ func BenchmarkPuzzle_Solvable_Solved(b *testing.B) {
 
 func BenchmarkPuzzle_Solvable_Random(b *testing.B) {
 	puzzle, _ := NewRandomPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.Solvable()
 	}
@@ -92,6 +94,7 @@ func TestPuzzle_IsSolved_NoZero(t *testing.T) {
 
 func BenchmarkPuzzle_IsSolved_Solved(b *testing.B) {
 	puzzle, _ := NewSolvedPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.IsSolved()
 	}
@@ -99,6 +102,7 @@ func BenchmarkPuzzle_IsSolved_Solved(b *testing.B) {
 
 func BenchmarkPuzzle_IsSolved_Random(b *testing.B) {
 	puzzle, _ := NewRandomPuzzle(4)
+	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		puzzle.IsSolved()
 	}

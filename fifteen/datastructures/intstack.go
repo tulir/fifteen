@@ -31,7 +31,9 @@ func (s *IntStack) Push(v uint64) {
 
 // Remove removes the element at the top of the stack.
 func (s *IntStack) Remove() {
-	*s = (*s)[:len(*s)-1]
+	if len(*s) > 0 {
+		*s = (*s)[:len(*s)-1]
+	}
 }
 
 // Contains checks if the stack contains the given value.

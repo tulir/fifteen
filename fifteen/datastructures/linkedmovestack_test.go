@@ -18,6 +18,7 @@ package ds
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
 )
 
@@ -37,4 +38,22 @@ func TestLinkedMoveStack_All(t *testing.T) {
 	lms.Pop()
 	lms.Pop()
 	assert.Empty(t, lms.Array())
+}
+
+func BenchmarkLinkedMoveStack_Push(b *testing.B) {
+	lms := LinkedMoveStack{}
+	for n := 0; n < b.N; n++ {
+		lms.Push(Position{X: rand.Intn(4)+1, Y: rand.Intn(4)+1})
+	}
+}
+
+func BenchmarkLinkedMoveStack_Array(b *testing.B) {
+	lms := LinkedMoveStack{}
+	for i := 0; i < 80; i++ {
+		lms.Push(Position{X: rand.Intn(4)+1, Y: rand.Intn(4)+1})
+	}
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		lms.Array()
+	}
 }
