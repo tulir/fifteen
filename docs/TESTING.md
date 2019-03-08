@@ -33,8 +33,8 @@ go tool cover -html=coverage.out -o file.html
 
 ## Performance tests
 There are performance tests for functions that are critical to the algorithm,
-such as the manhattan distance calculation function, the puzzle move function
-and the puzzle solved check function.
+such as the manhattan distance calculation function, the puzzle move function,
+the puzzle solved check function and data structure functions.
 
 ### Running benchmarks
 Basic run of all benchmarks:

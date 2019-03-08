@@ -52,5 +52,10 @@ to being specific to 4x4 puzzles. An improved version could use his walking
 distance heuristic when solving 4x4 puzzles, or maybe even generalize it to
 work on other sizes.
 
+The manhattan distance heuristic could have been made more efficient by only
+calculating differences instead of recalculating completely on each step. I
+realized that potential optimization too late and didn't have time to make a
+working implementation.
+
 Memory usage could have probably been reduced by using smaller types (e.g. uint8
 instead of int), but these gains might not have been that great.
