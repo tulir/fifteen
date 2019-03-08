@@ -17,6 +17,8 @@ Data structures and algorithms project, 15-puzzle solver. Written in Go.
          [util](https://godoc.org/maunium.net/go/fifteen/fifteen/util)
 
 ## Installation
+Download a prebuilt executable from the [releases](https://github.com/tulir/fifteen/releases) section, or
+
 0. Install [Go](https://golang.org/) 1.11 or higher
 1. Clone the repository with `git clone https://github.com/tulir/fifteen.git`
 2. Fetch dependencies and compile with `go build -o fifteen-bin`

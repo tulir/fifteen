@@ -3,6 +3,9 @@ Run with `./fifteen-bin <flags>` after building as specified README.
 See `./fifteen-bin --help` for a list of flags or see below for in-depth
 explanations of each flag.
 
+If you downloaded a release instead of building manually, the file name may be
+something else than `fifteen-bin`.
+
 If using windows, it is recommended to use a unix-like terminal, such as
 Cygwin, Windows Subsystem for Linux or Git Bash.
 
